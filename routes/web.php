@@ -15,7 +15,7 @@ Route::get('/login', function () {
 });
 
 Route::get('/dashboard_user', function () {
-    return view('dashboar_user');
+    return view('dashboard_user');
 });
 
 Route::get('/membership', function () {
