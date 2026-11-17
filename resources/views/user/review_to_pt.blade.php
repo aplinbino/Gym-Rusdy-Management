@@ -286,7 +286,7 @@ textarea:focus {
 
 
     <!-- FORM RATING -->
-    <form action="/ratings" method="POST" id="ratingForm">
+    <form action="/dashboard_user" method="POST" id="ratingForm">
 
         <!-- ID PT -->
         <input type="hidden" name="trainer_id" value="PT001">
