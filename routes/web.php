@@ -19,11 +19,11 @@ Route::get('/dashboard_user', function () {
 });
 
 Route::get('/membership', function () {
-    return view('membership');
+    return view('user.membership');
 });
 
 Route::get('/review_to_pt', function () {
-    return view('review_to_pt');
+    return view('user.review_to_pt');
 });
 
 
