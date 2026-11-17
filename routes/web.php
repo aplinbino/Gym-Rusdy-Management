@@ -28,8 +28,8 @@ Route::get('/review_to_pt', function () {
 
 
 // INI ROUTE TRAINER==============================
-Route::get('/review_from_user', function () {
-    return view('personal_trainer.review_from_user');
+Route::get('/personal-trainer', function () {
+    return view('personal_trainer.personal-trainer');
 });
 
 Route::get('/schedule', function () {
