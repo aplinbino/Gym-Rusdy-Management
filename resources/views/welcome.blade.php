@@ -559,7 +559,7 @@ section.content-section {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 30%;
+    object-position: center 15%;
     transition: transform .35s;
 }
 
@@ -817,7 +817,7 @@ footer {
 <header>
     <a class="brand" href="#">
         <span class="brand-mark">I</span>
-        <span>IRONHUB</span>
+        <span>GYMOK</span>
     </a>
 
     <nav aria-label="Navigasi utama">
@@ -1012,13 +1012,13 @@ footer {
         <article class="pt-card">
             <div class="pt-photo">
                 <img
-                    src="https://images.unsplash.com/photo-1745329532588-1394a50671f0?auto=format&fit=crop&w=900&q=85"
+                    src="{{ asset('images/carmen.jpg') }}"
                     alt="Foto personal trainer Rizky Pratama"
                     loading="lazy">
             </div>
 
             <div class="pt-info">
-                <h3>Rizky Pratama</h3>
+                <h3>Carmen</h3>
                 <p>Strength & Conditioning Coach</p>
 
                 <div class="tags">
@@ -1033,13 +1033,13 @@ footer {
         <article class="pt-card">
             <div class="pt-photo">
                 <img
-                    src="https://images.unsplash.com/photo-1704223523571-2b3778308425?auto=format&fit=crop&w=900&q=85"
-                    alt="Foto personal trainer Andi Saputra"
+                    src="{{ asset('images/cuking_gym.png') }}"
+                    alt="Foto personal trainer Carmen"
                     loading="lazy">
             </div>
 
             <div class="pt-info">
-                <h3>Andi Saputra</h3>
+                <h3>Carmen</h3>
                 <p>Fitness & Hypertrophy Coach</p>
 
                 <div class="tags">
