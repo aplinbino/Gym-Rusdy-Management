@@ -50,3 +50,8 @@ Route::get('/tabel_schedule', function () {
 Route::get('/tabel_transaction', function () {
     return view('admin.tabel_transaction');
 });
+
+
+Route::get('/login-with-role', function () {
+    return view('login_with_role');
+});
