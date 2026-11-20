@@ -502,7 +502,7 @@ section.content-section {
     white-space: nowrap;
 }
 
-/* HORIZONTAL SCROLL PT */
+/* PT HORIZONTAL SCROLL */
 
 .pt-track {
     display: grid;
@@ -550,39 +550,28 @@ section.content-section {
 .pt-photo {
     height: 260px;
     position: relative;
-    display: flex;
-    align-items: end;
-    justify-content: center;
-    background: radial-gradient(ellipse at 50% 25%, #64735b, #29352a 65%, #151b15);
+    overflow: hidden;
+    background: #202a20;
+}
+
+.pt-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    transition: transform .35s;
+}
+
+.pt-card:hover .pt-photo img {
+    transform: scale(1.05);
 }
 
 .pt-photo:after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, transparent 55%, rgba(10,14,10,.72));
-}
-
-.person {
-    position: relative;
-    width: 130px;
-    height: 205px;
-    z-index: 1;
-    background: linear-gradient(145deg, #c8f169, #617a39);
-    clip-path: polygon(35% 0,65% 0,78% 12%,100% 42%,83% 55%,77% 100%,23% 100%,17% 55%,0 42%,22% 12%);
-    border-radius: 30px 30px 0 0;
-}
-
-.person.p2 {
-    background: linear-gradient(145deg, #c28d68, #634532);
-}
-
-.person.p3 {
-    background: linear-gradient(145deg, #9bb6c7, #405968);
-}
-
-.person.p4 {
-    background: linear-gradient(145deg, #c7a77b, #66513b);
+    background: linear-gradient(180deg, transparent 55%, rgba(10,14,10,.5));
 }
 
 .pt-info {
@@ -875,6 +864,7 @@ footer {
     </section>
 
     <section class="visual" aria-label="Suasana gym IRONHUB">
+
         <div class="glow"></div>
 
         <div class="float">
@@ -905,6 +895,7 @@ footer {
         <div class="sticker">
             NO EXCUSES. JUST PROGRESS.
         </div>
+
     </section>
 
 </main>
@@ -914,6 +905,7 @@ footer {
 <section class="content-section" id="membership">
 
     <div class="section-head center">
+
         <div class="eyebrow">Choose your commitment</div>
 
         <h2>
@@ -926,6 +918,7 @@ footer {
             Pendaftaran serta pemilihan paket dilakukan setelah kamu
             memiliki akun dan login.
         </p>
+
     </div>
 
     <div class="pricing">
@@ -1012,13 +1005,16 @@ footer {
 
     </div>
 
-    <!-- KARTU PT BISA DIGESER HORIZONTAL -->
+    <!-- PT 1 -->
 
     <div class="pt-track">
 
         <article class="pt-card">
             <div class="pt-photo">
-                <div class="person"></div>
+                <img
+                    src="https://images.unsplash.com/photo-1745329532588-1394a50671f0?auto=format&fit=crop&w=900&q=85"
+                    alt="Foto personal trainer Rizky Pratama"
+                    loading="lazy">
             </div>
 
             <div class="pt-info">
@@ -1032,9 +1028,14 @@ footer {
             </div>
         </article>
 
+        <!-- PT 2 -->
+
         <article class="pt-card">
             <div class="pt-photo">
-                <div class="person p2"></div>
+                <img
+                    src="https://images.unsplash.com/photo-1704223523571-2b3778308425?auto=format&fit=crop&w=900&q=85"
+                    alt="Foto personal trainer Andi Saputra"
+                    loading="lazy">
             </div>
 
             <div class="pt-info">
@@ -1048,9 +1049,14 @@ footer {
             </div>
         </article>
 
+        <!-- PT 3 -->
+
         <article class="pt-card">
             <div class="pt-photo">
-                <div class="person p3"></div>
+                <img
+                    src="https://images.unsplash.com/photo-1575507440599-d990adbe4b9b?auto=format&fit=crop&w=900&q=85"
+                    alt="Foto personal trainer Fajar Ramadhan"
+                    loading="lazy">
             </div>
 
             <div class="pt-info">
@@ -1064,9 +1070,14 @@ footer {
             </div>
         </article>
 
+        <!-- PT 4 -->
+
         <article class="pt-card">
             <div class="pt-photo">
-                <div class="person p4"></div>
+                <img
+                    src="https://images.unsplash.com/photo-1643142314134-dd4527289af7?auto=format&fit=crop&w=900&q=85"
+                    alt="Foto personal trainer Reza Maulana"
+                    loading="lazy">
             </div>
 
             <div class="pt-info">
@@ -1080,9 +1091,14 @@ footer {
             </div>
         </article>
 
+        <!-- PT 5 -->
+
         <article class="pt-card">
             <div class="pt-photo">
-                <div class="person p2"></div>
+                <img
+                    src="https://images.unsplash.com/photo-1650345732823-a6df02b2c215?auto=format&fit=crop&w=900&q=85"
+                    alt="Foto personal trainer Arga Mahendra"
+                    loading="lazy">
             </div>
 
             <div class="pt-info">
@@ -1104,6 +1120,7 @@ footer {
 <section class="content-section" id="why">
 
     <div class="section-head center">
+
         <div class="eyebrow">Why choose ironhub</div>
 
         <h2>
@@ -1116,6 +1133,7 @@ footer {
             Di IRONHUB, kami menyediakan ruang dan dukungan agar kamu
             bisa terus berkembang.
         </p>
+
     </div>
 
     <div class="why-grid">
@@ -1196,5 +1214,6 @@ footer {
 
 </div>
 </div>
+
 </body>
 </html>
