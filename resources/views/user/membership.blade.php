@@ -81,23 +81,23 @@
       <section class="section" id="trainer">
         <div class="section-head"><div><div class="step">02 / PERSONAL TRAINER</div><h2>Pilih personal trainer</h2><div class="section-sub">Pilih trainer jika ingin didampingi, atau lanjutkan tanpa personal trainer. Biaya PT dihitung berdasarkan jumlah sesi.</div></div></div>
         <p class="calendar-help" style="margin:0 0 10px">Geser ke kanan atau kiri untuk melihat semua personal trainer.</p>\n        <div class="trainers" id="trainers">
-          <button class="trainer" data-trainer="Rizky Pratama" data-fee="500000">
+          <button class="trainer" data-trainer="Rizky Pratama" data-fee="100000">
             <img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?auto=format&fit=crop&w=900&q=85" alt="Personal trainer Rizky sedang berlatih" />
             <div class="trainer-info"><div class="trainer-top"><h3>Rizky Pratama</h3><span class="tag">PPL</span></div><p>Fokus pada pembentukan otot dan progressive overload. Membantu member membangun rutinitas latihan yang konsisten.</p><div class="trainer-meta"><span>Pengalaman</span><strong>5 Tahun</strong></div><div class="trainer-meta" style="margin-top:7px"><span>Biaya PT</span><strong>Rp500.000 / sesi</strong></div></div>
           </button>
-          <button class="trainer" data-trainer="Andi Saputra" data-fee="450000">
+          <button class="trainer" data-trainer="Andi Saputra" data-fee="100000">
             <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=85" alt="Personal trainer Andi" />
             <div class="trainer-info"><div class="trainer-top"><h3>Andi Saputra</h3><span class="tag">UL</span></div><p>Berpengalaman mendampingi program upper-lower split, peningkatan kekuatan, dan perbaikan teknik gerakan.</p><div class="trainer-meta"><span>Pengalaman</span><strong>4 Tahun</strong></div><div class="trainer-meta" style="margin-top:7px"><span>Biaya PT</span><strong>Rp450.000 / sesi</strong></div></div>
           </button>
-          <button class="trainer" data-trainer="Dimas Alvaro" data-fee="550000">
+          <button class="trainer" data-trainer="Dimas Alvaro" data-fee="100000">
             <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=85" alt="Personal trainer Dimas di gym" />
             <div class="trainer-info"><div class="trainer-top"><h3>Dimas Alvaro</h3><span class="tag">PPL / UL</span></div><p>Membantu member menyusun program latihan sesuai target, mulai dari membangun massa otot hingga kebugaran umum.</p><div class="trainer-meta"><span>Pengalaman</span><strong>6 Tahun</strong></div><div class="trainer-meta" style="margin-top:7px"><span>Biaya PT</span><strong>Rp550.000 / sesi</strong></div></div>
           </button>
-          <button class="trainer" data-trainer="Arga Mahendra" data-fee="475000">
+          <button class="trainer" data-trainer="Arga Mahendra" data-fee="100000">
             <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=85" alt="Personal trainer Arga sedang berlatih" />
             <div class="trainer-info"><div class="trainer-top"><h3>Arga Mahendra</h3><span class="tag">UL</span></div><p>Fokus pada peningkatan kekuatan tubuh bagian atas dan bawah, teknik latihan, serta progres beban bertahap.</p><div class="trainer-meta"><span>Pengalaman</span><strong>3 Tahun</strong></div><div class="trainer-meta" style="margin-top:7px"><span>Biaya PT</span><strong>Rp475.000 / sesi</strong></div></div>
           </button>
-          <button class="trainer" data-trainer="Fajar Ramadhan" data-fee="500000">
+          <button class="trainer" data-trainer="Fajar Ramadhan" data-fee="100000">
             <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=85" alt="Personal trainer Fajar di gym" />
             <div class="trainer-info"><div class="trainer-top"><h3>Fajar Ramadhan</h3><span class="tag">PPL / UL</span></div><p>Mendampingi program pembentukan otot dan kebugaran dengan penyesuaian intensitas sesuai kemampuan member.</p><div class="trainer-meta"><span>Pengalaman</span><strong>5 Tahun</strong></div><div class="trainer-meta" style="margin-top:7px"><span>Biaya PT</span><strong>Rp500.000 / sesi</strong></div></div>
           </button>
