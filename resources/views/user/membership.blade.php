@@ -81,7 +81,7 @@
       <section class="section" id="trainer">
         <div class="section-head"><div><div class="step">02 / PERSONAL TRAINER</div><h2>Pilih personal trainer</h2><div class="section-sub">Pilih trainer jika ingin didampingi, atau lanjutkan tanpa personal trainer. Biaya PT dihitung berdasarkan jumlah sesi.</div></div></div>
         <p class="calendar-help" style="margin:0 0 10px">Geser ke kanan atau kiri untuk melihat semua personal trainer.</p>\n        <div class="trainers" id="trainers">
-          <button class="trainer" data-trainer="Rizky Pratama" data-fee="100000">
+          <button class="trainer" data-trainer="Adit Otot Kawat" data-fee="100000">
             <img src="{{ asset('images/cuking_gym.png') }}" alt="Personal trainer Rizky sedang berlatih" />
             <div class="trainer-info"><div class="trainer-top"><h3>Adit Otot Kawat</h3><span class="tag">PPL</span></div><p>Fokus pada pembentukan otot dan progressive overload. Membantu member membangun rutinitas latihan yang konsisten.</p><div class="trainer-meta"><span>Pengalaman</span><strong>5 Tahun</strong></div><div class="trainer-meta" style="margin-top:7px"><span>Biaya PT</span><strong>Rp500.000 / sesi</strong></div></div>
           </button>
