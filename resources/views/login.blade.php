@@ -55,17 +55,97 @@
     <p class="subtitle">Masuk ke akun IRONHUB kamu untuk mengakses dashboard dan jadwal latihan.</p>
 
     <!-- Menggunakan action="/user_dashboard" agar langsung berpindah halaman saat disubmit -->
-    <form action="/dashboard_user">
-      <div>
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" placeholder="nama@email.com" autocomplete="email" required>
-      </div>
-      <div>
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" placeholder="Masukkan password kamu" autocomplete="current-password" required>
-      </div>
-      <button type="submit">Login</button>
+    
+
+    <form action="{{ route('sign_up.store') }}" method="POST">
+        @csrf
+
+        <div>
+            <label for="name">Nama lengkap</label>
+            <input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Masukkan nama lengkap"
+                autocomplete="name"
+                value="{{ old('name') }}"
+                required
+            >
+
+            @error('name')
+                <small style="color: red;">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div>
+            <label for="email">Email</label>
+            <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="nama@email.com"
+                autocomplete="email"
+                value="{{ old('email') }}"
+                required
+            >
+
+            @error('email')
+                <small style="color: red;">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div>
+            <label for="phone">Nomor telepon</label>
+            <input
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="Contoh: 081234567890"
+                autocomplete="tel"
+                value="{{ old('phone') }}"
+            >
+
+            @error('phone')
+                <small style="color: red;">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div>
+            <label for="password">Password</label>
+            <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Minimal 8 karakter"
+                minlength="8"
+                autocomplete="new-password"
+                required
+            >
+
+            @error('password')
+                <small style="color: red;">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div>
+            <label for="password_confirmation">
+                Konfirmasi password
+            </label>
+            <input
+                id="password_confirmation"
+                name="password_confirmation"
+                type="password"
+                placeholder="Masukkan ulang password"
+                minlength="8"
+                autocomplete="new-password"
+                required
+            >
+        </div>
+
+        <button type="submit">Daftar Sekarang</button>
     </form>
+
+
 
     <p class="register">Belum punya akun? <a href="/sign_up">Daftar sekarang</a></p>
   </main>

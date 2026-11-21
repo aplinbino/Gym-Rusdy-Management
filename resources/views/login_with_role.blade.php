@@ -121,44 +121,53 @@
     <div class="logo">IRONHUB</div>
     <p class="subtitle">Silakan login untuk melanjutkan</p>
 
-    <form action="/login" method="POST">
+    
+<form action="{{ route('login.staff') }}" method="POST">
+    @csrf
 
-      <div class="form-group">
+    <div class="form-group">
         <label for="email">Email</label>
         <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Masukkan email"
-          required
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Masukkan email"
+            value="{{ old('email') }}"
+            required
         >
-      </div>
+    </div>
 
-      <div class="form-group">
+    <div class="form-group">
         <label for="password">Password</label>
         <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Masukkan password"
-          required
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Masukkan password"
+            required
         >
-      </div>
+    </div>
 
-      <div class="form-group">
+    <div class="form-group">
         <label for="role">Login Sebagai</label>
         <select id="role" name="role" required>
-          <option value="" disabled selected>Pilih role</option>
-          <option value="personal_trainer">Personal Trainer</option>
-          <option value="admin">Admin</option>
+            <option value="" disabled selected>Pilih role</option>
+            <option value="pt">Personal Trainer</option>
+            <option value="admin">Admin</option>
         </select>
-      </div>
+    </div>
 
-      <button type="submit" class="login-button">
+    @if ($errors->any())
+        <p style="color: #ff7777; margin-bottom: 15px;">
+            {{ $errors->first() }}
+        </p>
+    @endif
+
+    <button type="submit" class="login-button">
         Login
-      </button>
+    </button>
+</form>
 
-    </form>
 
     <p class="footer-text">
       IRONHUB &copy; 2026
