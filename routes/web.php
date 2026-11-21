@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -55,3 +56,10 @@ Route::get('/tabel_transaction', function () {
 Route::get('/login-with-role', function () {
     return view('login_with_role');
 });
+
+Route::get('/sign_up', function () {
+    return view('sign_up');
+});
+
+Route::post('/sign_up', [AuthController::class, 'signUp'])
+    ->name('sign_up.store');
