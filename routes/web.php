@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminPtController;
+use App\Http\Controllers\DashboardUserController;
  
 
 Route::get('/', function () {
@@ -18,8 +19,14 @@ Route::get('/login', function () {
     return view('login');
 });
 
-Route::get('/dashboard_user', function () {
-    return view('user.dashboard_user');
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/dashboard_user', [DashboardUserController::class, 'index'])
+        ->name('user.dashboard_user');
+
+    Route::post('/member/jadwal', [DashboardUserController::class, 'storeSchedule'])
+        ->name('member.schedule.store');
+
 });
 
 Route::get('/membership', function () {

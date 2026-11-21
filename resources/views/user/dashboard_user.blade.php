@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IRONHUB — Member Dashboard</title>
+<title>GYMBRO — Member Dashboard</title>
 <style>
 :root{--bg:#0b100e;--panel:#121a16;--panel2:#18231d;--line:#29372e;--text:#edf4ee;--muted:#91a196;--lime:#b8f34a;--lime2:#d4ff82;--danger:#ff7777;--radius:18px}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}button,input,select{font:inherit}
@@ -21,188 +21,257 @@ main{padding:30px 38px 50px;max-width:1500px;width:100%;margin:0 auto}.topbar{di
 </head>
 <body>
 <div class="app">
-
 <main id="dashboard">
-  <div class="topbar"><div class="breadcrumb">Member Area <span style="color:#536257">/</span> Dashboard</div><div class="top-actions"><button class="icon-btn" aria-label="Notifikasi">♧</button><div class="avatar" id="profileAvatar">A</div></div></div>
-  <section class="welcome"><div><div class="eyebrow">MEMBER DASHBOARD</div><h1 id="welcomeMessage">Halo, Alfin! 👋</h1><p>Progress dibangun dari konsistensi. Siap untuk sesi latihan berikutnya?</p></div><button class="primary" id="openBooking">＋ Atur Sesi Selanjutnya</button></section>
-  <div id="activeDashboardContent">
-  <section class="grid-stats">
-    <div class="stat"><div class="stat-head">Sisa Membership <span class="stat-icon">◷</span></div><strong>182 Hari</strong><small>Berakhir 20 Mei 2027</small></div>
-    <div class="stat"><div class="stat-head">Sisa Sesi PT <span class="stat-icon">♟</span></div><strong id="remainingSessions">8 Sesi</strong><small>Dari total 12 sesi</small></div>
-    <div class="stat"><div class="stat-head">Sesi Selesai <span class="stat-icon">✓</span></div><strong id="completedSessions">4 Sesi</strong><small>Terus jaga konsistensi!</small></div>
-    <div class="stat"><div class="stat-head">Personal Trainer <span class="stat-icon">✦</span></div><strong style="font-size:18px">Rizky P.</strong><small>Split program: PPL / UL</small></div>
-  </section>
-  <div class="content-grid">
-    <div>
-      <section class="card membership">
-        <div class="membership-top"><span class="eyebrow">MEMBERSHIP KAMU</span><span class="pill">● ACTIVE</span></div>
-        <h2>IRONHUB — 6 Bulan</h2><p>Keanggotaan aktif · Paket dengan Personal Trainer</p>
-        <div class="progress"><span></span></div>
-        <div class="membership-foot"><span>Mulai 20 November 2026</span><span>Berakhir 20 Mei 2027</span></div>
-      </section>
-      <section class="card" id="jadwal">
-        <div class="card-title"><div><h2>Jadwal Latihan</h2><div class="subtle" style="margin-top:5px">Sesi PT yang sudah kamu jadwalkan</div></div><button class="secondary" id="openBooking2">＋ Pilih Sesi</button></div>
-        <div class="session-list" id="sessionList">
-          <div class="session"><div class="datebox"><b>22</b><small>NOV</small></div><div class="session-details"><strong>Upper Body</strong><small>10.00 – 11.00 WIB · Rizky Pratama</small></div><span class="session-status">Akan datang</span></div>
-          <div class="session"><div class="datebox"><b>25</b><small>NOV</small></div><div class="session-details"><strong>Lower Body</strong><small>16.00 – 17.00 WIB · Rizky Pratama</small></div><span class="session-status">Terjadwal</span></div>
-          <div class="session"><div class="datebox"><b>28</b><small>NOV</small></div><div class="session-details"><strong>Pull Day</strong><small>10.00 – 11.00 WIB · Rizky Pratama</small></div><span class="session-status">Terjadwal</span></div>
+    <div class="topbar">
+        <div class="breadcrumb">Member Area <span style="color:#536257">/</span> Dashboard</div>
+        <div class="top-actions">
+            <div class="avatar" id="profileAvatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button class="secondary" type="submit">Keluar</button>
+            </form>
         </div>
-      </section>
-      <section class="card">
-        <div class="card-title"><div><h2>Pilihan Jenis Sesi</h2><div class="subtle" style="margin-top:5px">Pilih fokus latihan saat mengatur sesi berikutnya</div></div></div>
-        <div class="split-grid">
-          <button class="split" data-split="Upper Body"><span class="emoji">💪</span><b>Upper Body</b><small>Dada, bahu, trisep</small></button>
-          <button class="split" data-split="Lower Body"><span class="emoji">🦵</span><b>Lower Body</b><small>Kaki dan glutes</small></button>
-          <button class="split" data-split="Pull Day"><span class="emoji">🏋️</span><b>Pull Day</b><small>Punggung dan bisep</small></button>
-          <button class="split" data-split="Push Day"><span class="emoji">🔥</span><b>Push Day</b><small>Dada, bahu, trisep</small></button>
-          <button class="split" data-split="Full Body"><span class="emoji">⚡</span><b>Full Body</b><small>Seluruh tubuh</small></button>
-        </div>
-      </section>
     </div>
-    <div>
-      <section class="card" id="pt">
-        <div class="card-title"><h2>Personal Trainer Kamu</h2><span class="tag">PT AKTIF</span></div>
-        <div class="trainer-row"><div class="trainer-photo">🏋️</div><div class="trainer-info"><strong>Rizky Pratama</strong><small>Program PPL / Upper-Lower</small></div></div>
-        <div style="height:1px;background:var(--line);margin:17px 0"></div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:12px"><span class="subtle">Sesi digunakan</span><strong style="font-size:12px">4 / 12</strong></div>
-        <div class="progress" style="margin:0 0 8px"><span style="width:33.33%"></span></div>
-        <div class="subtle">8 sesi masih tersedia dalam paket PT kamu.</div>
-      </section>
-      <section class="card">
-        <div class="card-title"><h2>Aktivitas Terakhir</h2></div>
-        <div class="session-list">
-          <div class="session"><div class="datebox"><b>18</b><small>NOV</small></div><div class="session-details"><strong>Push Day</strong><small>Sesi selesai · 10.00 WIB</small></div><span class="session-status">✓</span></div>
-          <div class="session"><div class="datebox"><b>15</b><small>NOV</small></div><div class="session-details"><strong>Lower Body</strong><small>Sesi selesai · 16.00 WIB</small></div><span class="session-status">✓</span></div>
+
+    <section class="welcome">
+        <div>
+            <div class="eyebrow">MEMBER DASHBOARD</div>
+            <h1>Halo, {{ $user->name }}! 👋</h1>
+            <p>Progress dibangun dari konsistensi. Siap untuk sesi latihan berikutnya?</p>
         </div>
-      </section>
-      <section class="card" id="profil">
-        <div class="card-title"><h2>Informasi Member</h2><button class="secondary" onclick="alert('Fitur edit profil dapat dihubungkan ke Laravel nanti.')">Edit Profil</button></div>
-        <div style="display:grid;gap:13px">
-          <div><div class="subtle">Nama Lengkap</div><strong style="font-size:12px">Alfin Maulana Abiyudha</strong></div>
-          <div><div class="subtle">Email</div><strong style="font-size:12px">alfin@email.com</strong></div>
-          <div><div class="subtle">Nomor HP</div><strong style="font-size:12px">08xxxxxxxxxx</strong></div>
+        @if($membershipActive)
+            <button class="primary" id="openBooking" type="button">＋ Atur Sesi Selanjutnya</button>
+        @endif
+    </section>
+
+    @if(session('success'))
+        <div class="toast show" style="display:block;position:static;margin-bottom:16px">{{ session('success') }}</div>
+    @endif
+    @if($errors->any())
+        <div class="card" style="border-color:#8b4545;color:#ffaaaa;margin-bottom:16px">
+            @foreach($errors->all() as $error)<div>{{ $error }}</div>@endforeach
         </div>
-      </section>
+    @endif
+
+    
+  @if(!$membershipActive)
+    <section class="card inactive-state">
+        <div class="inactive-icon">!</div>
+
+        <h2>Kamu belum berlangganan.</h2>
+
+        <p>
+            Silakan berlangganan membership GYMBRO terlebih dahulu
+            untuk menikmati seluruh fitur dashboard.
+        </p>
+
+        <a href="{{ url('/membership') }}" class="primary inactive-button">
+            Langganan Sekarang
+        </a>
+    </section>
+
+    @else
+    <section class="grid-stats">
+        <div class="stat">
+            <div class="stat-head">Sisa Membership <span class="stat-icon">◷</span></div>
+            <strong>{{ $membershipDaysLeft }} Hari</strong>
+            <small>Berakhir {{ \Carbon\Carbon::parse($user->membership_end)->translatedFormat('d F Y') }}</small>
+        </div>
+        <div class="stat">
+            <div class="stat-head">Sisa Sesi PT <span class="stat-icon">♟</span></div>
+            <strong>{{ $remainingSessions }} Sesi</strong>
+            <small>Dari total {{ $totalSessions }} sesi yang disetujui</small>
+        </div>
+        <div class="stat">
+            <div class="stat-head">Sesi Selesai <span class="stat-icon">✓</span></div>
+            <strong>{{ $completedSessions }} Sesi</strong>
+            <small>Terus jaga konsistensi!</small>
+        </div>
+        <div class="stat">
+            <div class="stat-head">Personal Trainer <span class="stat-icon">✦</span></div>
+            <strong style="font-size:18px">{{ $trainer->pt_name ?? 'Belum memilih PT' }}</strong>
+            <small>{{ $trainer->split_gym ?? 'Latihan mandiri' }}</small>
+        </div>
+    </section>
+
+    <div class="content-grid">
+        <div>
+            <section class="card membership">
+                <div class="membership-top">
+                    <span class="eyebrow">MEMBERSHIP KAMU</span>
+                    <span class="pill">● ACTIVE</span>
+                </div>
+                <h2>GYMBRO — {{ $membershipPlan ?? 'Membership' }}</h2>
+                <p>Keanggotaan aktif · {{ $trainer ? 'Dengan Personal Trainer' : 'Latihan mandiri' }}</p>
+<div class="progress"><span style="width:{{ $membershipProgress }}%"></span></div>
+                <div class="membership-foot">
+                    <span>Mulai {{ \Carbon\Carbon::parse($user->membership_start)->translatedFormat('d F Y') }}</span>
+                    <span>Berakhir {{ \Carbon\Carbon::parse($user->membership_end)->translatedFormat('d F Y') }}</span>
+                </div>
+            </section>
+
+            <section class="card" id="jadwal">
+                <div class="card-title">
+                    <div><h2>Jadwal Latihan</h2><div class="subtle" style="margin-top:5px">Jadwal latihan yang tersimpan di akunmu</div></div>
+                    <button class="secondary" id="openBooking2" type="button">＋ Pilih Sesi</button>
+                </div>
+                <div class="session-list" id="sessionList">
+                    @forelse($schedules as $schedule)
+                        <div class="session">
+                            <div class="datebox">
+                                <b>{{ \Carbon\Carbon::parse($schedule->tanggal)->format('d') }}</b>
+                                <small>{{ strtoupper(\Carbon\Carbon::parse($schedule->tanggal)->translatedFormat('M')) }}</small>
+                            </div>
+                            <div class="session-details">
+                                <strong>{{ $schedule->jenis_latihan }}</strong>
+                                <small>
+                                    {{ substr($schedule->jam, 0, 5) }} WIB
+                                    · {{ $schedule->pt_name ?: 'Latihan mandiri' }}
+                                </small>
+                            </div>
+                            <span class="session-status">{{ ucfirst($schedule->status) }}</span>
+                        </div>
+                    @empty
+                        <div class="empty">Belum ada jadwal latihan. Buat jadwal pertamamu!</div>
+                    @endforelse
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="card-title"><div><h2>Pilihan Jenis Sesi</h2><div class="subtle" style="margin-top:5px">Pilih fokus latihan saat mengatur sesi berikutnya</div></div></div>
+                <div class="split-grid">
+                    @foreach([
+                        ['Push Day','🔥','Dada, bahu, trisep'],
+                        ['Pull Day','🏋️','Punggung dan bisep'],
+                        ['Leg Day','🦵','Kaki dan glutes'],
+                        ['Upper Body','💪','Tubuh bagian atas'],
+                        ['Lower Body','🦵','Tubuh bagian bawah'],
+                        ['Full Body','⚡','Seluruh tubuh'],
+                    ] as [$split,$emoji,$description])
+                        <button class="split" data-split="{{ $split }}" type="button">
+                            <span class="emoji">{{ $emoji }}</span><b>{{ $split }}</b><small>{{ $description }}</small>
+                        </button>
+                    @endforeach
+                </div>
+            </section>
+        </div>
+
+        <div>
+            <section class="card" id="pt">
+                <div class="card-title"><h2>Personal Trainer Kamu</h2><span class="tag">{{ $trainer ? 'PT AKTIF' : 'BELUM ADA PT' }}</span></div>
+                @if($trainer)
+                    <div class="trainer-row">
+                        <div class="trainer-photo">🏋️</div>
+                        <div class="trainer-info">
+                            <strong>{{ $trainer->pt_name }}</strong>
+                            <small>{{ $trainer->split_gym }}</small>
+                        </div>
+                    </div>
+                    <div style="height:1px;background:var(--line);margin:17px 0"></div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+                        <span class="subtle">Sesi digunakan</span>
+                        <strong style="font-size:12px">{{ $completedSessions }} / {{ $totalSessions }}</strong>
+                    </div>
+                    <div class="progress" style="margin:0 0 8px"><span style="width:{{ $totalSessions > 0 ? min(100, ($completedSessions / $totalSessions) * 100) : 0 }}%"></span></div>
+                    <div class="subtle">{{ $remainingSessions }} sesi masih tersedia.</div>
+                @else
+                    <div class="empty">Kamu belum memiliki Personal Trainer aktif. Kamu tetap bisa membuat jadwal latihan mandiri.</div>
+                @endif
+            </section>
+
+            <section class="card">
+                <div class="card-title"><h2>Aktivitas Terakhir</h2></div>
+                <div class="session-list">
+                    @forelse($recentActivities as $activity)
+                        <div class="session">
+                            <div class="datebox">
+                                <b>{{ \Carbon\Carbon::parse($activity->tanggal)->format('d') }}</b>
+                                <small>{{ strtoupper(\Carbon\Carbon::parse($activity->tanggal)->translatedFormat('M')) }}</small>
+                            </div>
+                            <div class="session-details">
+                                <strong>{{ $activity->jenis_latihan }}</strong>
+                                <small>Sesi selesai · {{ substr($activity->jam, 0, 5) }} WIB</small>
+                            </div>
+                            <span class="session-status">✓</span>
+                        </div>
+                    @empty
+                        <div class="empty">Belum ada aktivitas latihan yang selesai.</div>
+                    @endforelse
+                </div>
+            </section>
+
+            <section class="card" id="profil">
+                <div class="card-title"><h2>Informasi Member</h2></div>
+                <div style="display:grid;gap:13px">
+                    <div><div class="subtle">Nama Lengkap</div><strong style="font-size:12px">{{ $user->name }}</strong></div>
+                    <div><div class="subtle">Email</div><strong style="font-size:12px">{{ $user->email }}</strong></div>
+                    <div><div class="subtle">Nomor HP</div><strong style="font-size:12px">{{ $user->phone ?: 'Belum diisi' }}</strong></div>
+                </div>
+            </section>
+        </div>
     </div>
-  </div>
-  </div>
-
-  <section class="card inactive-state" id="inactiveMembership" style="display:none">
-    <div class="inactive-icon">!</div>
-    <h2>Membership Belum Aktif</h2>
-    <p>
-      Membership kamu belum aktif. Silakan aktifkan membership terlebih dahulu
-      untuk mengakses dashboard, jadwal latihan, dan fasilitas member IRONHUB.
-    </p>
-    <a href="/membership" class="primary inactive-button">Aktifkan Membership</a>
-  </section>
-
+    @endif
 </main>
 </div>
 
-
+@if($membershipActive)
 <div class="modal-backdrop" id="bookingModal">
-  <div class="modal">
-    <div class="modal-head"><h2>Atur Sesi Selanjutnya</h2><button class="close" id="closeModal">×</button></div>
-    <p>Pilih jenis latihan yang ingin kamu lakukan bersama Rizky. Setelah itu, tentukan tanggal dan jam yang tersedia. Jadwal akan berstatus menunggu konfirmasi PT.</p>
-    <div class="field"><label>JENIS LATIHAN</label>
-      <div class="split-grid" id="modalSplits">
-        <button class="split selected" data-modal-split="Upper Body"><span class="emoji">💪</span><b>Upper Body</b></button>
-        <button class="split" data-modal-split="Lower Body"><span class="emoji">🦵</span><b>Lower Body</b></button>
-        <button class="split" data-modal-split="Pull Day"><span class="emoji">🏋️</span><b>Pull Day</b></button>
-        <button class="split" data-modal-split="Push Day"><span class="emoji">🔥</span><b>Push Day</b></button>
-        <button class="split" data-modal-split="Full Body"><span class="emoji">⚡</span><b>Full Body</b></button>
-      </div>
+    <div class="modal">
+        <div class="modal-head"><h2>Atur Sesi Selanjutnya</h2><button class="close" id="closeModal" type="button">×</button></div>
+        <p>
+            @if($trainer)
+                Pilih jenis latihan, tanggal, dan jam. Jadwal akan menunggu konfirmasi Personal Trainer.
+            @else
+                Kamu belum memiliki PT aktif. Jadwal yang dibuat akan tercatat sebagai latihan mandiri.
+            @endif
+        </p>
+        <form method="POST" action="{{ route('member.schedule.store') }}">
+            @csrf
+            <div class="field"><label>JENIS LATIHAN</label>
+                <select name="jenis_latihan" id="jenisLatihan" required>
+                    <option>Push Day</option><option>Pull Day</option><option>Leg Day</option>
+                    <option>Upper Body</option><option>Lower Body</option><option>Full Body</option>
+                </select>
+            </div>
+            <div class="field"><label for="sessionDate">TANGGAL LATIHAN</label>
+                <input type="date" name="tanggal" id="sessionDate" min="{{ now()->toDateString() }}" required>
+            </div>
+            <div class="field"><label for="sessionTime">PILIH JAM</label>
+                <select name="jam" id="sessionTime" required>
+                    <option value="08:00">08.00 WIB</option>
+                    <option value="10:00">10.00 WIB</option>
+                    <option value="13:00">13.00 WIB</option>
+                    <option value="16:00">16.00 WIB</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="secondary" id="cancelBooking" type="button">Batal</button>
+                <button class="primary" type="submit">Simpan Jadwal</button>
+            </div>
+        </form>
     </div>
-    <div class="field"><label for="sessionDate">TANGGAL LATIHAN</label><input type="date" id="sessionDate" min="2026-11-20"></div>
-    <div class="field"><label for="sessionTime">PILIH JAM</label><select id="sessionTime"><option value="08.00 – 09.00 WIB">08.00 – 09.00 WIB</option><option value="10.00 – 11.00 WIB">10.00 – 11.00 WIB</option><option value="13.00 – 14.00 WIB">13.00 – 14.00 WIB</option><option value="16.00 – 17.00 WIB">16.00 – 17.00 WIB</option></select></div>
-    <div class="modal-actions"><button class="secondary" id="cancelBooking">Batal</button><button class="primary" id="saveBooking">Ajukan Jadwal</button></div>
-  </div>
 </div>
-<div class="toast" id="toast">Jadwal berhasil diajukan.</div>
+@endif
+
 <script>
-/*
-  DATA DUMMY MEMBER
-  Untuk mengetes tampilan:
-  - active: true  -> tampilkan dashboard member + fitur PT
-  - active: false -> tampilkan pesan membership belum aktif
-  Nantinya object ini bisa diisi dari database Laravel.
-*/
-const userData = {
-  name: "Alfin",
-  membership: {
-    active: true, // Ubah menjadi false untuk melihat tampilan membership nonaktif
-    remainingDays: 182,
-    expiredDate: "20 Mei 2027",
-    plan: "6 Bulan"
-  },
-  personalTrainer: {
-    name: "Rizky Pratama",
-    remainingSessions: 8,
-    totalSessions: 12
-  }
-};
+const modal = document.getElementById('bookingModal');
+const openModal = () => modal && modal.classList.add('show');
+const closeModal = () => modal && modal.classList.remove('show');
 
-function renderMembershipState() {
-  const isActive = Boolean(userData.membership.active);
-  document.getElementById("welcomeMessage").textContent =
-    isActive ? `Halo, ${userData.name}! 👋` : `Halo, ${userData.name}!`;
-  document.getElementById("profileName").textContent = userData.name.toUpperCase();
-  document.getElementById("profileAvatar").textContent =
-    userData.name.trim().charAt(0).toUpperCase();
+document.getElementById('openBooking')?.addEventListener('click', openModal);
+document.getElementById('openBooking2')?.addEventListener('click', openModal);
+document.getElementById('closeModal')?.addEventListener('click', closeModal);
+document.getElementById('cancelBooking')?.addEventListener('click', closeModal);
+modal?.addEventListener('click', event => {
+    if (event.target === modal) closeModal();
+});
 
-  document.getElementById("activeDashboardContent").style.display =
-    isActive ? "block" : "none";
-  document.getElementById("inactiveMembership").style.display =
-    isActive ? "none" : "block";
-
-  if (isActive) {
-    document.querySelector(".stat strong").textContent =
-      `${userData.membership.remainingDays} Hari`;
-    document.querySelector(".stat small").textContent =
-      `Berakhir ${userData.membership.expiredDate}`;
-    document.querySelector(".membership h2").textContent =
-      `IRONHUB — ${userData.membership.plan}`;
-    document.querySelector(".membership-foot span:last-child").textContent =
-      `Berakhir ${userData.membership.expiredDate}`;
-    document.getElementById("remainingSessions").textContent =
-      `${userData.personalTrainer.remainingSessions} Sesi`;
-    document.querySelector("#pt .trainer-info strong").textContent =
-      userData.personalTrainer.name;
-  }
-}
-
-renderMembershipState();
-
-const modal=document.getElementById('bookingModal');
-const open=()=>modal.classList.add('show');
-const close=()=>modal.classList.remove('show');
-document.getElementById('openBooking').onclick=open;
-document.getElementById('openBooking2').onclick=open;
-document.getElementById('closeModal').onclick=close;
-document.getElementById('cancelBooking').onclick=close;
-modal.addEventListener('click',e=>{if(e.target===modal)close()});
-let selectedSplit='Upper Body';
-document.querySelectorAll('[data-modal-split]').forEach(btn=>btn.addEventListener('click',()=>{
-  document.querySelectorAll('[data-modal-split]').forEach(x=>x.classList.remove('selected'));
-  btn.classList.add('selected');selectedSplit=btn.dataset.modalSplit;
-}));
-document.querySelectorAll('[data-split]').forEach(btn=>btn.addEventListener('click',()=>{
-  document.querySelectorAll('[data-split]').forEach(x=>x.classList.remove('selected'));
-  btn.classList.add('selected');selectedSplit=btn.dataset.split;open();
-  document.querySelectorAll('[data-modal-split]').forEach(x=>x.classList.toggle('selected',x.dataset.modalSplit===selectedSplit));
-}));
-document.getElementById('saveBooking').addEventListener('click',()=>{
-  const dateValue=document.getElementById('sessionDate').value;
-  if(!dateValue){alert('Pilih tanggal latihan terlebih dahulu.');return;}
-  const date=new Date(dateValue+'T00:00:00');
-  const day=String(date.getDate()).padStart(2,'0');
-  const month=date.toLocaleDateString('id-ID',{month:'short'}).replace('.','').toUpperCase();
-  const time=document.getElementById('sessionTime').value;
-  const item=document.createElement('div');item.className='session';
-  item.innerHTML=`<div class="datebox"><b>${day}</b><small>${month}</small></div><div class="session-details"><strong>${selectedSplit}</strong><small>${time} · Rizky Pratama</small></div><span class="session-status">Menunggu</span>`;
-  document.getElementById('sessionList').appendChild(item);
-  close();const toast=document.getElementById('toast');toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2600);
+document.querySelectorAll('[data-split]').forEach(button => {
+    button.addEventListener('click', () => {
+        const select = document.getElementById('jenisLatihan');
+        if (select) select.value = button.dataset.split;
+        openModal();
+    });
 });
 </script>
 </body>
