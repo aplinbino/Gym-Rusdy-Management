@@ -4,7 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminPtController;
+ use App\Http\Controllers\AdminTransaksiController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminScheduleController;
 use App\Http\Controllers\DashboardUserController;
+
  
 
 Route::get('/', function () {
@@ -101,3 +105,20 @@ Route::put('/admin/pt/{pt}', [AdminPtController::class, 'update'])
 
 Route::delete('/admin/pt/{pt}', [AdminPtController::class, 'destroy'])
     ->name('admin.pt.destroy');
+
+    Route::get('/admin/transaksi', [AdminTransaksiController::class, 'index'])
+    ->name('admin.transaksi.index');
+
+    // DATA USER ADMIN
+Route::get('/admin/users', [AdminUserController::class, 'index'])
+    ->name('admin.users.index');
+    
+Route::post('/admin/users', [AdminUserController::class, 'store'])
+    ->name('admin.users.store');
+
+Route::delete('/admin/users/{id}', [AdminUserController::class, 'destroy'])
+    ->name('admin.users.destroy');
+
+// JADWAL PERSONAL TRAINER ADMIN
+Route::get('/admin/jadwal-pt', [AdminScheduleController::class, 'index'])
+    ->name('admin.jadwal-pt.index');

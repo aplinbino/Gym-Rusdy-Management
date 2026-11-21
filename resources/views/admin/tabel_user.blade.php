@@ -645,100 +645,13 @@ footer {
    atau database MySQL.
 ===================================== */
 
-let transaksi = [
-    {
-        id: "TRX001",
-        user: "Budi Santoso",
-        produk: "Membership Premium",
-        tanggal: "2026-11-20",
-        total: "500000",
-        status: "Berhasil"
-    },
-    {
-        id: "TRX002",
-        user: "Andi Pratama",
-        produk: "Personal Trainer",
-        tanggal: "2026-11-21",
-        total: "250000",
-        status: "Pending"
-    },
-    {
-        id: "TRX003",
-        user: "Siti Aminah",
-        produk: "Membership Basic",
-        tanggal: "2026-11-22",
-        total: "300000",
-        status: "Berhasil"
-    }
-];
+let transaksi = [];
 
-let users = [
-    {
-        id: "USR001",
-        nama: "Budi Santoso",
-        email: "budi@gmail.com",
-        hp: "081234567890",
-        membership: "Premium",
-        status: "Aktif"
-    },
-    {
-        id: "USR002",
-        nama: "Siti Aminah",
-        email: "siti@gmail.com",
-        hp: "082345678901",
-        membership: "Basic",
-        status: "Aktif"
-    },
-    {
-        id: "USR003",
-        nama: "Andi Pratama",
-        email: "andi@gmail.com",
-        hp: "083456789012",
-        membership: "Tidak Ada",
-        status: "Nonaktif"
-    }
-];
+let users = [];
 
 let trainers = [];
 
-let schedules = [
-    {
-        id: "JDL001",
-        trainer: "Andi Pratama",
-        user: "Budi Santoso",
-        tanggal: "2026-11-23",
-        mulai: "10:00",
-        selesai: "12:00",
-        status: "Booking"
-    },
-    {
-        id: "JDL002",
-        trainer: "Rudi Hartono",
-        user: "Siti Aminah",
-        tanggal: "2026-11-25",
-        mulai: "13:00",
-        selesai: "15:00",
-        status: "Booking"
-    },
-    {
-        id: "JDL003",
-        trainer: "Dimas Saputra",
-        user: "-",
-        tanggal: "2026-11-26",
-        mulai: "09:00",
-        selesai: "11:00",
-        status: "Tersedia"
-    },
-    {
-        id: "JDL004",
-        trainer: "Andi Pratama",
-        user: "-",
-        tanggal: "2026-11-27",
-        mulai: "14:00",
-        selesai: "16:00",
-        status: "Tersedia"
-    }
-];
+let schedules = [];
 
 /* =====================================
    PENGATURAN HALAMAN
@@ -757,19 +670,12 @@ const configs = {
         columns: [
             ["id", "ID Transaksi"],
             ["user", "Nama User"],
-            ["produk", "Produk"],
+            ["produk", "Jenis Transaksi"],
             ["tanggal", "Tanggal"],
             ["total", "Total"],
             ["status", "Status"]
         ],
-        fields: [
-            ["id", "ID Transaksi"],
-            ["user", "Nama User"],
-            ["produk", "Produk"],
-            ["tanggal", "Tanggal", "date"],
-            ["total", "Total Pembayaran", "number"],
-            ["status", "Status", "select", ["Berhasil", "Pending", "Gagal"]]
-        ]
+        fields: []
     },
 
     users: {
@@ -785,12 +691,10 @@ const configs = {
             ["status", "Status"]
         ],
         fields: [
-            ["id", "ID User"],
             ["nama", "Nama Lengkap"],
             ["email", "Email", "email"],
             ["hp", "Nomor HP"],
-            ["membership", "Membership"],
-            ["status", "Status", "select", ["Aktif", "Nonaktif"]]
+            ["password", "Password", "password"]
         ]
     },
 
@@ -810,28 +714,22 @@ const configs = {
         fields: []
     },
 
-    jadwal: {
+        jadwal: {
         title: "Jadwal Personal Trainer",
         description: "Kelola seluruh jadwal personal trainer.",
         data: () => schedules,
+
         columns: [
             ["id", "ID Jadwal"],
             ["trainer", "Personal Trainer"],
             ["user", "Nama User"],
             ["tanggal", "Tanggal"],
-            ["mulai", "Jam Mulai"],
-            ["selesai", "Jam Selesai"],
+            ["jam", "Jam"],
+            ["jenis_latihan", "Jenis Latihan"],
             ["status", "Status"]
         ],
-        fields: [
-            ["id", "ID Jadwal"],
-            ["trainer", "Nama Trainer"],
-            ["user", "Nama User"],
-            ["tanggal", "Tanggal", "date"],
-            ["mulai", "Jam Mulai", "time"],
-            ["selesai", "Jam Selesai", "time"],
-            ["status", "Status Booking", "select", ["Booking", "Tersedia"]]
-        ]
+
+        fields: []
     }
 };
 
@@ -839,38 +737,156 @@ const configs = {
    SIDEBAR
 ===================================== */
 
+// EVENT LISTENER MENU SIDEBAR
 document.querySelectorAll(".nav-item[data-page]").forEach(button => {
     button.addEventListener("click", () => {
         currentPage = button.dataset.page;
         currentSearch = "";
 
+        // Mengatur menu yang sedang aktif
         document.querySelectorAll(".nav-item").forEach(item => {
             item.classList.remove("active");
         });
 
         button.classList.add("active");
 
+        // Menutup sidebar pada tampilan mobile
         document.getElementById("sidebar").classList.remove("open");
 
-        if (currentPage === "trainers") {
+        // Memuat data sesuai menu
+        if (currentPage === "transaksi") {
+            loadTransaksi();
+        } else if (currentPage === "trainers") {
             loadTrainers();
+        } else if (currentPage === "users") {
+            loadUsers();
+        } else if (currentPage === "jadwal") {
+            loadJadwal();
         } else {
             renderPage();
         }
     });
 });
 
-function toggleSidebar() {
-    document.getElementById("sidebar").classList.toggle("open");
+async function loadUsers() {
+    try {
+        const response = await fetch("/admin/users", {
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Gagal mengambil data user.");
+        }
+
+        const data = await response.json();
+
+        users = data.map(user => ({
+            id: user.id,
+            nama: user.name,
+            email: user.email,
+            hp: user.phone || "-",
+            membership: user.membership_status === "active"
+                ? "Aktif"
+                : user.membership_status,
+            status: user.membership_status === "active"
+                ? "Aktif"
+                : "Nonaktif",
+            membership_start: user.membership_start,
+            membership_end: user.membership_end
+        }));
+
+        renderPage();
+
+    } catch (error) {
+        console.error("Error loadUsers:", error);
+        alert(error.message);
+    }
 }
 
-function filterMenu(value) {
-    document.querySelectorAll(".nav-item[data-page]").forEach(item => {
-        item.style.display =
-            item.textContent.toLowerCase().includes(value.toLowerCase())
-            ? "flex" : "none";
-    });
+async function loadJadwal() {
+    try {
+        const response = await fetch("/admin/jadwal-pt", {
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Gagal mengambil data jadwal PT.");
+        }
+
+        const data = await response.json();
+
+        schedules = data.map(jadwal => ({
+            id: jadwal.id,
+            trainer: jadwal.pt?.pt_name || "-",
+            user: jadwal.user?.name || "-",
+            tanggal: jadwal.tanggal
+                ? jadwal.tanggal.substring(0, 10)
+                : "-",
+            jam: jadwal.jam || "-",
+            jenis_latihan: jadwal.jenis_latihan || "-",
+            status: jadwal.status || "-",
+            catatan: jadwal.catatan || "-"
+        }));
+
+        renderPage();
+
+    } catch (error) {
+        console.error("Error loadJadwal:", error);
+        alert(error.message);
+    }
 }
+
+async function loadTransaksi() {
+    try {
+        const response = await fetch("/admin/transaksi", {
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Gagal mengambil data transaksi.");
+        }
+
+        const result = await response.json();
+
+        transaksi = result.map(item => {
+            let produk = "";
+
+            if (item.jenis_transaksi === "membership") {
+                produk = `Membership ${item.membership_months} Bulan`;
+            } else {
+                produk = `Personal Trainer (${item.jumlah_sesi} Sesi)`;
+            }
+
+            const status = {
+                pending: "Pending",
+                approved: "Berhasil",
+                rejected: "Gagal"
+            };
+
+            return {
+                id: item.id,
+                user: item.user?.name || "-",
+                produk: produk,
+                tanggal: item.tanggal_transaksi,
+                total: item.total_harga,
+                status: status[item.status] || item.status
+            };
+        });
+
+        renderPage();
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
+}
+
 
 /* =====================================
    DASHBOARD
@@ -905,7 +921,9 @@ function renderDashboard() {
 
             <div class="stat-card">
                 <small>Jadwal Booking</small>
-                <h2>${schedules.filter(s => s.status === "Booking").length}</h2>
+                ${schedules.filter(s =>
+                ["approved", "pending"].includes(s.status)
+            ).length}
             </div>
 
         </section>
@@ -1010,10 +1028,6 @@ function renderTable() {
     const config = configs[currentPage];
 
     let data = config.data();
-
-    if (currentPage === "jadwal") {
-        data = data.filter(item => item.status === scheduleTab);
-    }
 
     const filtered = data.filter(item =>
         Object.values(item).some(value =>
@@ -1392,6 +1406,49 @@ document.getElementById("dataForm").addEventListener("submit", async function(e)
         return;
     }
 
+        // Khusus Data User: simpan ke database Laravel
+if (currentPage === "users") {
+    try {
+        const response = await fetch("/admin/users", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector(
+                    'meta[name="csrf-token"]'
+                ).content
+            },
+            body: JSON.stringify({
+                name: newData.nama,
+                email: newData.email,
+                phone: newData.hp,
+                password: newData.password
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            const errors = result.errors
+                ? Object.values(result.errors).flat().join("\n")
+                : result.message;
+
+            throw new Error(errors || "Gagal menambahkan member.");
+        }
+
+        closeModal();
+        await loadUsers();
+
+        alert(result.message);
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
+
+    return;
+}
+
     // Penyimpanan data dummy untuk halaman lain
     const data = configs[currentPage].data();
 
@@ -1466,7 +1523,38 @@ async function deleteData(index) {
 
         return;
     }
+        // Khusus Data User: hapus melalui database Laravel
+if (currentPage === "users") {
+    try {
+        const response = await fetch(`/admin/users/${item.id}`, {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json",
+                "X-CSRF-TOKEN": document.querySelector(
+                    'meta[name="csrf-token"]'
+                ).content
+            }
+        });
 
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                result.message || "Gagal menghapus member."
+            );
+        }
+
+        alert(result.message);
+
+        await loadUsers();
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
+
+    return;
+}
     // Data halaman lain masih menggunakan array sementara
     data.splice(index, 1);
     renderPage();
@@ -1509,7 +1597,22 @@ function logout() {
    JALANKAN APLIKASI
 ===================================== */
 
-renderPage();
+async function loadDashboardData() {
+    if (currentPage !== "dashboard") return;
+
+    await Promise.all([
+        loadUsers(),
+        loadTransaksi(),
+        loadTrainers(),
+        loadJadwal()
+    ]);
+
+    if (currentPage === "dashboard") {
+        renderDashboard();
+    }
+}
+
+loadDashboardData();
 
 </script>
 
