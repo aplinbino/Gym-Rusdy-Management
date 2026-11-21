@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -55,3 +56,15 @@ Route::get('/tabel_transaction', function () {
 Route::get('/login-with-role', function () {
     return view('login_with_role');
 });
+
+// Login Member
+Route::post('/login', [LoginController::class, 'loginMember'])
+    ->name('login.member');
+
+// Login Admin dan PT
+Route::post('/login-with-role', [LoginController::class, 'loginStaff'])
+    ->name('login.staff');
+
+// Proses logout
+Route::post('/logout', [LoginController::class, 'logout'])
+    ->name('logout');

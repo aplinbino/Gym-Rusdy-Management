@@ -55,17 +55,44 @@
     <p class="subtitle">Masuk ke akun IRONHUB kamu untuk mengakses dashboard dan jadwal latihan.</p>
 
     <!-- Menggunakan action="/user_dashboard" agar langsung berpindah halaman saat disubmit -->
-    <form action="/dashboard_user">
-      <div>
+    
+<form action="{{ route('login.member') }}" method="POST">
+    @csrf
+
+    <div>
         <label for="email">Email</label>
-        <input id="email" name="email" type="email" placeholder="nama@email.com" autocomplete="email" required>
-      </div>
-      <div>
+        <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="nama@email.com"
+            autocomplete="email"
+            value="{{ old('email') }}"
+            required
+        >
+    </div>
+
+    <div>
         <label for="password">Password</label>
-        <input id="password" name="password" type="password" placeholder="Masukkan password kamu" autocomplete="current-password" required>
-      </div>
-      <button type="submit">Login</button>
-    </form>
+        <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Masukkan password kamu"
+            autocomplete="current-password"
+            required
+        >
+    </div>
+
+    @if ($errors->any())
+        <p style="color: #ff7777; font-size: 13px;">
+            {{ $errors->first() }}
+        </p>
+    @endif
+
+    <button type="submit">Login</button>
+</form>
+
 
     <p class="register">Belum punya akun? <a href="/sign_up">Daftar sekarang</a></p>
   </main>
