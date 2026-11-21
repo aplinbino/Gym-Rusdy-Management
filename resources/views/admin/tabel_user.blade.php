@@ -1,9 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="theme-color" content="#101510">
 <title>Admin Dashboard — IRONHUB</title>
 
@@ -699,32 +699,7 @@ let users = [
     }
 ];
 
-let trainers = [
-    {
-        id: "PT001",
-        nama: "Andi Pratama",
-        spesialisasi: "Weight Training",
-        pengalaman: "5 Tahun",
-        tarif: "150000",
-        status: "Aktif"
-    },
-    {
-        id: "PT002",
-        nama: "Rudi Hartono",
-        spesialisasi: "Cardio",
-        pengalaman: "3 Tahun",
-        tarif: "120000",
-        status: "Aktif"
-    },
-    {
-        id: "PT003",
-        nama: "Dimas Saputra",
-        spesialisasi: "Body Building",
-        pengalaman: "4 Tahun",
-        tarif: "175000",
-        status: "Aktif"
-    }
-];
+let trainers = [];
 
 let schedules = [
     {
@@ -821,24 +796,18 @@ const configs = {
 
     trainers: {
         title: "Data Personal Trainer",
-        description: "Kelola seluruh personal trainer IRONHUB.",
+        description: "Kelola akun dan profil Personal Trainer IRONHUB.",
         data: () => trainers,
         columns: [
-            ["id", "ID Trainer"],
-            ["nama", "Nama"],
-            ["spesialisasi", "Spesialisasi"],
-            ["pengalaman", "Pengalaman"],
-            ["tarif", "Tarif"],
+            ["id", "ID"],
+            ["nama", "Nama PT"],
+            ["email", "Email"],
+            ["hp", "No. HP"],
+            ["split", "Split Gym"],
+            ["tarif", "Harga/Sesi"],
             ["status", "Status"]
         ],
-        fields: [
-            ["id", "ID Trainer"],
-            ["nama", "Nama Trainer"],
-            ["spesialisasi", "Spesialisasi"],
-            ["pengalaman", "Pengalaman"],
-            ["tarif", "Tarif", "number"],
-            ["status", "Status", "select", ["Aktif", "Nonaktif"]]
-        ]
+        fields: []
     },
 
     jadwal: {
@@ -883,7 +852,11 @@ document.querySelectorAll(".nav-item[data-page]").forEach(button => {
 
         document.getElementById("sidebar").classList.remove("open");
 
-        renderPage();
+        if (currentPage === "trainers") {
+            loadTrainers();
+        } else {
+            renderPage();
+        }
     });
 });
 
@@ -997,6 +970,40 @@ function statusBadge(status) {
 /* =====================================
    RENDER TABEL
 ===================================== */
+
+async function loadTrainers() {
+    try {
+        const response = await fetch('/admin/pt', {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Gagal mengambil data PT.');
+        }
+
+        const result = await response.json();
+
+        trainers = result.map(pt => ({
+            id: pt.id,
+            user_id: pt.user_id,
+            nama: pt.pt_name,
+            email: pt.user.email,
+            hp: pt.user.phone,
+            split: pt.split_gym,
+            tarif: pt.price_per_session,
+            description: pt.description || '',
+            status: pt.status === 'active' ? 'Aktif' : 'Nonaktif'
+        }));
+
+        renderPage();
+
+    } catch (error) {
+        console.error(error);
+        alert('Tidak dapat mengambil data Personal Trainer.');
+    }
+}
 
 function renderTable() {
 
@@ -1222,68 +1229,173 @@ function openEdit(index) {
    FORM DINAMIS
 ===================================== */
 
+
+
+
 function renderForm(item) {
+    const formFields = document.getElementById("formFields");
+
+    if (currentPage === "trainers") {
+        const isEditing = editIndex !== null;
+
+        formFields.innerHTML = `
+            <div class="form-group">
+                <label>Nama Lengkap</label>
+                <input type="text" name="name" value="${item.nama || ""}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Nama Personal Trainer</label>
+                <input type="text" name="pt_name" value="${item.pt_name || item.nama || ""}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" value="${item.email || ""}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Nomor HP</label>
+                <input type="text" name="phone" value="${item.hp || ""}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password ${isEditing ? "(Kosongkan jika tidak diubah)" : ""}</label>
+                <input type="password" name="password" ${isEditing ? "" : "required"} minlength="8">
+            </div>
+
+            <div class="form-group">
+                <label>Split Gym</label>
+                <select name="split_gym" required>
+                    ${["Push Day", "Pull Day", "Leg Day", "Upper Body", "Lower Body", "Full Body"].map(value => `
+                        <option value="${value}" ${item.split === value ? "selected" : ""}>
+                            ${value}
+                        </option>
+                    `).join("")}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Deskripsi</label>
+                <input type="text" name="description" value="${item.description || ""}">
+            </div>
+
+            ${isEditing ? `
+                <div class="form-group">
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="active" ${item.status === "Aktif" ? "selected" : ""}>Aktif</option>
+                        <option value="inactive" ${item.status === "Nonaktif" ? "selected" : ""}>Nonaktif</option>
+                    </select>
+                </div>
+            ` : ""}
+        `;
+
+        return;
+    }
 
     const fields = configs[currentPage].fields;
 
-    document.getElementById("formFields").innerHTML =
-        fields.map(field => {
+    formFields.innerHTML = fields.map(field => {
+        const [key, label, type, options] = field;
+        let input = "";
 
-            const [key, label, type, options] = field;
-
-            let input = "";
-
-            if (type === "select") {
-
-                input = `
-                    <select name="${key}" required>
-                        ${options.map(option => `
-                            <option value="${option}"
-                                ${item[key] === option ? "selected" : ""}>
-                                ${option}
-                            </option>
-                        `).join("")}
-                    </select>
-                `;
-
-            } else {
-
-                input = `
-                    <input
-                        type="${type || "text"}"
-                        name="${key}"
-                        value="${item[key] || ""}"
-                        required
-                    >
-                `;
-            }
-
-            return `
-                <div class="form-group">
-                    <label>${label}</label>
-                    ${input}
-                </div>
+        if (type === "select") {
+            input = `
+                <select name="${key}" required>
+                    ${options.map(option => `
+                        <option value="${option}" ${item[key] === option ? "selected" : ""}>
+                            ${option}
+                        </option>
+                    `).join("")}
+                </select>
             `;
+        } else {
+            input = `
+                <input
+                    type="${type || "text"}"
+                    name="${key}"
+                    value="${item[key] || ""}"
+                    required
+                >
+            `;
+        }
 
-        }).join("");
+        return `
+            <div class="form-group">
+                <label>${label}</label>
+                ${input}
+            </div>
+        `;
+    }).join("");
 }
+
+
 
 /* =====================================
    SIMPAN DATA
 ===================================== */
 
-document.getElementById("dataForm").addEventListener("submit", function(e) {
 
+document.getElementById("dataForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
     const formData = new FormData(this);
-
     const newData = Object.fromEntries(formData.entries());
 
+    // Khusus Personal Trainer: simpan ke database Laravel
+    if (currentPage === "trainers") {
+        const isEditing = editIndex !== null;
+        const trainerId = isEditing ? trainers[editIndex].id : null;
+
+        if (isEditing && !newData.password) {
+            delete newData.password;
+        }
+
+        const url = isEditing
+            ? `/admin/pt/${trainerId}`
+            : "/admin/pt";
+
+        try {
+            const response = await fetch(url, {
+                method: isEditing ? "PUT" : "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]'
+                    ).content
+                },
+                body: JSON.stringify(newData)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                const validationErrors = result.errors
+                    ? Object.values(result.errors).flat().join("\n")
+                    : result.message;
+
+                throw new Error(validationErrors || "Gagal menyimpan data PT.");
+            }
+
+            closeModal();
+            await loadTrainers();
+
+            alert(result.message);
+
+        } catch (error) {
+            console.error(error);
+            alert(error.message || "Terjadi kesalahan saat menyimpan data.");
+        }
+
+        return;
+    }
+
+    // Penyimpanan data dummy untuk halaman lain
     const data = configs[currentPage].data();
 
     if (editIndex === null) {
-
         const duplicate = data.some(item => item.id === newData.id);
 
         if (duplicate) {
@@ -1292,9 +1404,7 @@ document.getElementById("dataForm").addEventListener("submit", function(e) {
         }
 
         data.push(newData);
-
     } else {
-
         if (data.some((item, i) =>
             item.id === newData.id && i !== editIndex
         )) {
@@ -1308,6 +1418,7 @@ document.getElementById("dataForm").addEventListener("submit", function(e) {
     closeModal();
     renderPage();
 });
+
 
 /* =====================================
    HAPUS DATA

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminPtController;
  
 
 Route::get('/', function () {
@@ -80,3 +81,16 @@ Route::post('/logout', [LoginController::class, 'logout'])
     // PRoses login member
 Route::post('/login', [LoginController::class, 'loginMember'])
     ->name('login.member');
+
+    // CRUD PERSONAL TRAINER
+Route::get('/admin/pt', [AdminPtController::class, 'index'])
+    ->name('admin.pt.index');
+
+Route::post('/admin/pt', [AdminPtController::class, 'store'])
+    ->name('admin.pt.store');
+
+Route::put('/admin/pt/{pt}', [AdminPtController::class, 'update'])
+    ->name('admin.pt.update');
+
+Route::delete('/admin/pt/{pt}', [AdminPtController::class, 'destroy'])
+    ->name('admin.pt.destroy');
