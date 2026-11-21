@@ -102,7 +102,7 @@ class GymbroDummySeeder extends Seeder
                     'role' => 'member',
                     'membership_status' => 'active',
                     'membership_start' => $start,
-                    'membership_end' => $end,
+                    'membership_end' => $end
                 ], $timestamp);
 
                 if ($userId !== null) {
