@@ -1424,9 +1424,10 @@ document.getElementById("dataForm").addEventListener("submit", async function(e)
    HAPUS DATA
 ===================================== */
 
-function deleteData(index) {
 
+async function deleteData(index) {
     const data = configs[currentPage].data();
+    const item = data[index];
 
     const confirmDelete = confirm(
         "Apakah kamu yakin ingin menghapus data ini?"
@@ -1434,10 +1435,43 @@ function deleteData(index) {
 
     if (!confirmDelete) return;
 
-    data.splice(index, 1);
+    // Khusus Personal Trainer: hapus melalui database Laravel
+    if (currentPage === "trainers") {
+        try {
+            const response = await fetch(`/admin/pt/${item.id}`, {
+                method: "DELETE",
+                headers: {
+                    "Accept": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]'
+                    ).content
+                }
+            });
 
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || "Gagal menghapus PT.");
+            }
+
+            alert(result.message);
+
+            // Ambil ulang data dari database
+            await loadTrainers();
+
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+        }
+
+        return;
+    }
+
+    // Data halaman lain masih menggunakan array sementara
+    data.splice(index, 1);
     renderPage();
 }
+
 
 /* =====================================
    TUTUP MODAL
