@@ -76,3 +76,7 @@ Route::post('/login-with-role', [LoginController::class, 'loginStaff'])
 // Proses logout
 Route::post('/logout', [LoginController::class, 'logout'])
     ->name('logout');
+
+    // PRoses login member
+Route::post('/login', [LoginController::class, 'loginMember'])
+    ->name('login.member');

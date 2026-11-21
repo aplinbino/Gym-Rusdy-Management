@@ -57,25 +57,8 @@
     <!-- Menggunakan action="/user_dashboard" agar langsung berpindah halaman saat disubmit -->
     
 
-    <form action="{{ route('sign_up.store') }}" method="POST">
+    <form action="{{ route('login.member') }}" method="POST">
         @csrf
-
-        <div>
-            <label for="name">Nama lengkap</label>
-            <input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="Masukkan nama lengkap"
-                autocomplete="name"
-                value="{{ old('name') }}"
-                required
-            >
-
-            @error('name')
-                <small style="color: red;">{{ $message }}</small>
-            @enderror
-        </div>
 
         <div>
             <label for="email">Email</label>
@@ -90,23 +73,7 @@
             >
 
             @error('email')
-                <small style="color: red;">{{ $message }}</small>
-            @enderror
-        </div>
-
-        <div>
-            <label for="phone">Nomor telepon</label>
-            <input
-                id="phone"
-                name="phone"
-                type="tel"
-                placeholder="Contoh: 081234567890"
-                autocomplete="tel"
-                value="{{ old('phone') }}"
-            >
-
-            @error('phone')
-                <small style="color: red;">{{ $message }}</small>
+                <small style="color: #ff6b6b;">{{ $message }}</small>
             @enderror
         </div>
 
@@ -116,34 +83,19 @@
                 id="password"
                 name="password"
                 type="password"
-                placeholder="Minimal 8 karakter"
-                minlength="8"
-                autocomplete="new-password"
+                placeholder="Masukkan password kamu"
+                autocomplete="current-password"
                 required
             >
 
             @error('password')
-                <small style="color: red;">{{ $message }}</small>
+                <small style="color: #ff6b6b;">{{ $message }}</small>
             @enderror
         </div>
 
-        <div>
-            <label for="password_confirmation">
-                Konfirmasi password
-            </label>
-            <input
-                id="password_confirmation"
-                name="password_confirmation"
-                type="password"
-                placeholder="Masukkan ulang password"
-                minlength="8"
-                autocomplete="new-password"
-                required
-            >
-        </div>
-
-        <button type="submit">Daftar Sekarang</button>
+        <button type="submit">Login Sekarang</button>
     </form>
+
 
 
 
