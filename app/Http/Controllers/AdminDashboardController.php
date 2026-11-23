@@ -45,6 +45,7 @@ class AdminDashboardController extends Controller
             ->limit(5)
             ->get();
 
+        
         $jadwalTerbaru = DB::table('schedule_latihan as s')
             ->leftJoin('users as u', 'u.id', '=', 's.user_id')
             ->leftJoin('pt as p', 'p.id', '=', 's.pt_id')
@@ -58,10 +59,11 @@ class AdminDashboardController extends Controller
                 'p.pt_name as nama_pt',
             ])
             ->whereNotNull('s.pt_id')
-            ->orderByDesc('s.tanggal')
-            ->orderByDesc('s.jam')
+            ->orderBy('s.tanggal', 'asc')
+            ->orderBy('s.jam', 'asc')
             ->limit(5)
             ->get();
+
 
         return view('admin.dashboard', compact(
             'totalMember',

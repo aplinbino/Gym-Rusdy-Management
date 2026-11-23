@@ -1051,132 +1051,40 @@ footer {
 
     <!-- PT 1 -->
 
-    <div class="pt-track">
+    
+        <div class="pt-track">
 
-        <article class="pt-card">
-            <div class="pt-photo">
-                <img
-                    src="{{ asset('images/carmen.jpg') }}"
-                    alt="Foto personal trainer Adit Otot Kawat"
-                    loading="lazy">
-            </div>
+            @forelse ($pts as $pt)
 
-            <div class="pt-info">
-                <h3>Adit Otot Kawat</h3>
-                <p>Strength & Conditioning Coach</p>
+                <article class="pt-card">
+                    <div class="pt-photo">
+                        <img
+                            src="{{ $pt->photo ? asset('storage/' . ltrim($pt->photo, '/')) : asset('images/carmen.jpg') }}"
+                            alt="Foto {{ $pt->pt_name ?? $pt->user?->name ?? 'Personal Trainer' }}"
+                            loading="lazy">
+                    </div>
 
-                <div class="tags">
-                    <span class="tag">PPL</span>
-                    <span class="tag">Strength</span>
-                </div>
-            </div>
-        </article>
+                    <div class="pt-info">
+                        <h3>{{ $pt->pt_name ?? $pt->user?->name ?? 'Personal Trainer' }}</h3>
 
-        <!-- PT 2 -->
+                        <p>{{ $pt->description ?: 'Personal Trainer GYMBRO' }}</p>
 
-        <article class="pt-card">
-            <div class="pt-photo">
-                <img
-                    src="{{ asset('images/alpin.jpeg') }}"
-                    alt="Foto personal trainer Alpin sikpek"
-                    loading="lazy">
-            </div>
+                        <div class="tags">
+                            <span class="tag">Personal Trainer</span>
+                        </div>
+                    </div>
+                </article>
 
-            <div class="pt-info">
-                <h3>Alpin sikpek</h3>
-                <p>Fitness & Hypertrophy Coach</p>
+            @empty
 
-                <div class="tags">
-                    <span class="tag">UL</span>
-                    <span class="tag">Hypertrophy</span>
-                </div>
-            </div>
-        </article>
+                <p style="color: var(--muted); padding: 20px;">
+                    Belum ada Personal Trainer yang tersedia.
+                </p>
 
-        <!-- PT 3 -->
+            @endforelse
 
-        <article class="pt-card">
-            <div class="pt-photo">
-                <img
-                    src="https://images.unsplash.com/photo-1575507440599-d990adbe4b9b?auto=format&fit=crop&w=900&q=85"
-                    alt="Foto personal trainer Ikhwan Tulang Besi"
-                    loading="lazy">
-            </div>
+        </div>
 
-            <div class="pt-info">
-                <h3>Ikhwan Tulang Besi</h3>
-                <p>Personal Fitness Coach</p>
-
-                <div class="tags">
-                    <span class="tag">PPL</span>
-                    <span class="tag">Beginner</span>
-                </div>
-            </div>
-        </article>
-
-        <!-- PT 4 -->
-
-        <article class="pt-card">
-            <div class="pt-photo">
-                <img
-                    src="https://images.unsplash.com/photo-1643142314134-dd4527289af7?auto=format&fit=crop&w=900&q=85"
-                    alt="Foto personal trainer Dani Gapura Kabupaten"
-                    loading="lazy">
-            </div>
-
-            <div class="pt-info">
-                <h3>Dani Gapura Kabupaten</h3>
-                <p>Strength Training Coach</p>
-
-                <div class="tags">
-                    <span class="tag">UL</span>
-                    <span class="tag">Strength</span>
-                </div>
-            </div>
-        </article>
-
-        <!-- PT 5 -->
-
-        <article class="pt-card">
-            <div class="pt-photo">
-                <img
-                    src="https://images.unsplash.com/photo-1650345732823-a6df02b2c215?auto=format&fit=crop&w=900&q=85"
-                    alt="Foto personal trainer Eep Roti Sobek"
-                    loading="lazy">
-            </div>
-
-            <div class="pt-info">
-                <h3>Eep Roti Sobek</h3>
-                <p>Personal Fitness Coach</p>
-
-                <div class="tags">
-                    <span class="tag">UL</span>
-                </div>
-            </div>
-        </article>
-
-        <!-- PT 6 -->
-
-        <article class="pt-card">
-            <div class="pt-photo">
-                <img
-                    src="{{ asset('images/carmen.jpg') }}"
-                    alt="Foto personal trainer Siti Aerobik"
-                    loading="lazy">
-            </div>
-
-            <div class="pt-info">
-                <h3>Siti Aerobik</h3>
-                <p>Personal Fitness Coach</p>
-
-                <div class="tags">
-                    <span class="tag">UL</span>
-                </div>
-            </div>
-        </article>
-
-
-    </div>
 
 </section>
 

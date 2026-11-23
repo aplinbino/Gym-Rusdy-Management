@@ -185,8 +185,8 @@
 
                 <div class="panel">
                     <div class="panel-header">
-                        <h2>Jadwal PT Terbaru</h2>
-                        <span>5 jadwal terakhir</span>
+                        <h2>Jadwal PT Terdekat</h2>
+                        <span>5 Jadwal Terdekat</span>
                     </div>
                     <div class="table-wrap">
                         <table>

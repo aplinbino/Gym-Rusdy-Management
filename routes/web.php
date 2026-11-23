@@ -24,7 +24,12 @@ use App\Models\Pt;
 // ==========================================
 
 Route::get('/', function () {
-    return view('welcome');
+    $pts = Pt::with('user')
+        ->where('status', 'active')
+        ->orderBy('id', 'asc')
+        ->get();
+
+    return view('welcome', compact('pts'));
 });
 
 Route::get('/sign_up', function () {
