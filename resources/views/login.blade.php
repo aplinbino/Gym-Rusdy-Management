@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#111811">
-  <title>Login Member — IRONHUB</title>
+  <title>Login Member — GYMBRO</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -49,10 +49,10 @@
 </head>
 <body>
   <main class="card">
-    <div class="brand"><span class="mark">I</span><span>IRONHUB</span></div>
+    <div class="brand"><span class="mark">I</span><span>GYMBRO</span></div>
     <div class="eyebrow">Selamat datang kembali</div>
     <h1>Login Member</h1>
-    <p class="subtitle">Masuk ke akun IRONHUB kamu untuk mengakses dashboard dan jadwal latihan.</p>
+    <p class="subtitle">Masuk ke akun GYMBRO kamu untuk mengakses dashboard dan jadwal latihan.</p>
 
     <!-- Menggunakan action="/user_dashboard" agar langsung berpindah halaman saat disubmit -->
     

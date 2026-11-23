@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#111811">
-  <title>Daftar Member — IRONHUB</title>
+  <title>Daftar Member — GYMBRO</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -50,10 +50,10 @@
 </head>
 <body>
   <main class="card">
-    <div class="brand"><span class="mark">I</span><span>IRONHUB</span></div>
+    <div class="brand"><span class="mark">I</span><span>GYMBRO</span></div>
     <div class="eyebrow">Mulai perjalananmu</div>
     <h1>Daftar Member</h1>
-    <p class="subtitle">Buat akun IRONHUB dan mulai perjalanan menuju versi terbaik dirimu.</p>
+    <p class="subtitle">Buat akun GYMBRO dan mulai perjalanan menuju versi terbaik dirimu.</p>
 
  
     <form action="{{ route('sign_up.store') }}" method="POST">

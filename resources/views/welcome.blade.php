@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#101510">
-<title>IRONHUB — Train Beyond Limits</title>
+<title>GYMBRO — Train Beyond Limits</title>
 
 <style>
 :root {
@@ -847,7 +847,7 @@ footer {
         </h1>
 
         <p class="intro">
-            Bukan sekadar tempat untuk berolahraga. IRONHUB adalah ruang
+            Bukan sekadar tempat untuk berolahraga. GYMBRO adalah ruang
             untuk membangun kekuatan, disiplin, dan versi terbaik dari
             dirimu—satu repetisi dalam satu waktu.
         </p>
@@ -863,7 +863,7 @@ footer {
         </div>
     </section>
 
-    <section class="visual" aria-label="Suasana gym IRONHUB">
+    <section class="visual" aria-label="Suasana gym GYMBRO">
 
         <div class="glow"></div>
 
@@ -914,7 +914,7 @@ footer {
         </h2>
 
         <p>
-            Lihat pilihan durasi dan harga membership IRONHUB.
+            Lihat pilihan durasi dan harga membership GYMBRO.
             Pendaftaran serta pemilihan paket dilakukan setelah kamu
             memiliki akun dan login.
         </p>
@@ -1121,7 +1121,7 @@ footer {
 
     <div class="section-head center">
 
-        <div class="eyebrow">Why choose ironhub</div>
+        <div class="eyebrow">Why choose GYMBRO</div>
 
         <h2>
             BUKAN CUMA GYM. INI TEMPATMU
@@ -1130,7 +1130,7 @@ footer {
 
         <p>
             Setiap orang punya titik awal dan tujuan yang berbeda.
-            Di IRONHUB, kami menyediakan ruang dan dukungan agar kamu
+            Di GYMBRO, kami menyediakan ruang dan dukungan agar kamu
             bisa terus berkembang.
         </p>
 
@@ -1194,11 +1194,11 @@ footer {
         <p>
             Jangan tunggu waktu yang tepat untuk memulai. Ambil langkah
             pertamamu, bangun kebiasaan yang lebih baik, dan temukan
-            versi terkuat dirimu bersama IRONHUB.
+            versi terkuat dirimu bersama GYMBRO.
         </p>
 
         <a class="btn primary" href="/sign_up">
-            JOIN IRONHUB TODAY&nbsp; ↗
+            JOIN GYMBRO TODAY&nbsp; ↗
         </a>
 
     </div>
@@ -1208,7 +1208,7 @@ footer {
 <!-- FOOTER -->
 
 <footer>
-    <span>© 2025 IRONHUB FITNESS CLUB</span>
+    <span>© 2025 GYMBRO FITNESS CLUB</span>
     <span>Train hard · Stay humble · Keep growing</span>
 </footer>
 

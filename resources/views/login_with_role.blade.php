@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - IRONHUB</title>
+  <title>Login - GYMBRO</title>
 
   <style>
     * {
@@ -118,7 +118,7 @@
 
   <div class="login-container">
 
-    <div class="logo">IRONHUB</div>
+    <div class="logo">GYMBRO</div>
     <p class="subtitle">Silakan login untuk melanjutkan</p>
 
     
@@ -170,7 +170,7 @@
 
 
     <p class="footer-text">
-      IRONHUB &copy; 2026
+      GYMBRO &copy; 2026
     </p>
 
   </div>
