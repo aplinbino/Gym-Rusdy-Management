@@ -58,13 +58,27 @@ class LoginController extends Controller
     }
 
     // Logout
+  
+// Logout
     public function logout(Request $request)
     {
+        // Simpan role sebelum session logout
+        $role = Auth::user()?->role;
+
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        // Redirect berdasarkan role sebelumnya
+        if ($role === 'admin' || $role === 'pt') {
+            return redirect('/login-with-role')
+                ->with('success', 'Berhasil logout.');
+        }
+
+        // Default untuk Member
+        return redirect('/login')
+            ->with('success', 'Berhasil logout.');
     }
+
 }
