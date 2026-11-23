@@ -478,12 +478,6 @@ section.content-section {
 
 /* PERSONAL TRAINER */
 
-.pt-section {
-    background: linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,.035));
-    border-top: 1px solid rgba(255,255,255,.04);
-    border-bottom: 1px solid rgba(255,255,255,.04);
-}
-
 .pt-top {
     display: flex;
     justify-content: space-between;
@@ -805,6 +799,65 @@ footer {
         gap: 8px;
     }
 }
+/* HERO PHOTO - FIX */
+
+/* FOTO MEMENUHI SELURUH KOTAK HERO */
+
+.visual > .photo {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Foto sampai bawah */
+.visual > .photo > .pt-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Ukuran gambar */
+.visual > .photo > .pt-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+}
+
+/* Hilangkan overlay foto khusus PT */
+.visual > .photo > .pt-photo::after {
+    display: none;
+}
+
+/* Gradasi supaya tulisan tetap terbaca */
+.visual > .photo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(8,12,8,.03) 0%,
+            rgba(8,12,8,.12) 55%,
+            rgba(8,12,8,.80) 100%
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent 0 70px,
+            rgba(255,255,255,.08) 71px 73px
+        );
+}
+
+/* Tulisan di atas foto */
+.visual > .photo > .caption {
+    position: absolute;
+    z-index: 3;
+}
 </style>
 </head>
 
@@ -817,7 +870,7 @@ footer {
 <header>
     <a class="brand" href="#">
         <span class="brand-mark">I</span>
-        <span>GYMOK</span>
+        <span>GYMBRO</span>
     </a>
 
     <nav aria-label="Navigasi utama">
@@ -867,30 +920,21 @@ footer {
 
         <div class="glow"></div>
 
-        <div class="float">
-            <strong>01 / 100</strong>
-            <span>EVERY REP COUNTS</span>
-        </div>
-
         <div class="photo">
-            <div class="bar"></div>
-            <div class="weight left"></div>
-            <div class="weight right"></div>
 
-            <div class="lifter">
-                <div class="head"></div>
-                <div class="body-shape"></div>
-                <div class="arm left"></div>
-                <div class="arm right"></div>
-                <div class="leg left"></div>
-                <div class="leg right"></div>
-            </div>
+    <div class="pt-photo">
+        <img
+            src="{{ asset('images/pt.jpeg') }}"
+            alt="Foto personal trainer GYMBRO"
+            loading="lazy">
+    </div>
 
-            <div class="caption">
-                <small>BUILT BY DISCIPLINE</small>
-                <h2>Stronger every day.</h2>
-            </div>
-        </div>
+    <div class="caption">
+        <small>BUILT BY DISCIPLINE</small>
+        <h2>Stronger every day.</h2>
+    </div>
+
+</div>
 
         <div class="sticker">
             NO EXCUSES. JUST PROGRESS.
@@ -1013,12 +1057,12 @@ footer {
             <div class="pt-photo">
                 <img
                     src="{{ asset('images/carmen.jpg') }}"
-                    alt="Foto personal trainer Rizky Pratama"
+                    alt="Foto personal trainer Adit Otot Kawat"
                     loading="lazy">
             </div>
 
             <div class="pt-info">
-                <h3>Carmen</h3>
+                <h3>Adit Otot Kawat</h3>
                 <p>Strength & Conditioning Coach</p>
 
                 <div class="tags">
@@ -1033,13 +1077,13 @@ footer {
         <article class="pt-card">
             <div class="pt-photo">
                 <img
-                    src="{{ asset('images/cuking_gym.png') }}"
-                    alt="Foto personal trainer Carmen"
+                    src="{{ asset('images/alpin.jpeg') }}"
+                    alt="Foto personal trainer Alpin sikpek"
                     loading="lazy">
             </div>
 
             <div class="pt-info">
-                <h3>Carmen</h3>
+                <h3>Alpin sikpek</h3>
                 <p>Fitness & Hypertrophy Coach</p>
 
                 <div class="tags">
@@ -1055,12 +1099,12 @@ footer {
             <div class="pt-photo">
                 <img
                     src="https://images.unsplash.com/photo-1575507440599-d990adbe4b9b?auto=format&fit=crop&w=900&q=85"
-                    alt="Foto personal trainer Fajar Ramadhan"
+                    alt="Foto personal trainer Ikhwan Tulang Besi"
                     loading="lazy">
             </div>
 
             <div class="pt-info">
-                <h3>Fajar Ramadhan</h3>
+                <h3>Ikhwan Tulang Besi</h3>
                 <p>Personal Fitness Coach</p>
 
                 <div class="tags">
@@ -1076,12 +1120,12 @@ footer {
             <div class="pt-photo">
                 <img
                     src="https://images.unsplash.com/photo-1643142314134-dd4527289af7?auto=format&fit=crop&w=900&q=85"
-                    alt="Foto personal trainer Reza Maulana"
+                    alt="Foto personal trainer Dani Gapura Kabupaten"
                     loading="lazy">
             </div>
 
             <div class="pt-info">
-                <h3>Reza Maulana</h3>
+                <h3>Dani Gapura Kabupaten</h3>
                 <p>Strength Training Coach</p>
 
                 <div class="tags">
@@ -1097,12 +1141,12 @@ footer {
             <div class="pt-photo">
                 <img
                     src="https://images.unsplash.com/photo-1650345732823-a6df02b2c215?auto=format&fit=crop&w=900&q=85"
-                    alt="Foto personal trainer Arga Mahendra"
+                    alt="Foto personal trainer Eep Roti Sobek"
                     loading="lazy">
             </div>
 
             <div class="pt-info">
-                <h3>Arga Mahendra</h3>
+                <h3>Eep Roti Sobek</h3>
                 <p>Personal Fitness Coach</p>
 
                 <div class="tags">
@@ -1110,6 +1154,27 @@ footer {
                 </div>
             </div>
         </article>
+
+        <!-- PT 6 -->
+
+        <article class="pt-card">
+            <div class="pt-photo">
+                <img
+                    src="{{ asset('images/carmen.jpg') }}"
+                    alt="Foto personal trainer Siti Aerobik"
+                    loading="lazy">
+            </div>
+
+            <div class="pt-info">
+                <h3>Siti Aerobik</h3>
+                <p>Personal Fitness Coach</p>
+
+                <div class="tags">
+                    <span class="tag">UL</span>
+                </div>
+            </div>
+        </article>
+
 
     </div>
 
