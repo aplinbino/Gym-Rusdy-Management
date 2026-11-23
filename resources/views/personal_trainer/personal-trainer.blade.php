@@ -1907,6 +1907,7 @@ function profilePage() {
     const trainerEmail = @json($user->email);
     const trainerPhone = @json($user->phone ?? '');
     const trainerDescription = @json($pt->description ?? '');
+    const trainerPhoto = @json( $pt->photo ? asset('storage/' . $pt->photo) : null);
     const trainerStatus = @json(strtoupper((string) ($pt->status ?? 'Aktif')));
     const trainerPrice = PT_PRICE.toLocaleString("id-ID");
     const trainerInitial = trainerName.split(" ").filter(Boolean).slice(0, 2).map(word => word[0].toUpperCase()).join("");
@@ -1926,25 +1927,44 @@ function profilePage() {
         ) +
         `
         <section class="panel" style="max-width:850px">
-            <div class="profile-card">
-                <div class="profile-large">${escapeHtml(trainerInitial)}</div>
+            <div class="panel-head">
                 <div>
-                    <h2>${escapeHtml(trainerName)}</h2>
-                    <p>Personal Trainer · GYMBRO</p>
-                    <span class="badge" style="margin-top:9px">${escapeHtml(trainerStatus)}</span>
+                    <h2>Foto Profil</h2>
+                    <p class="sub">
+                        Unggah foto profil pribadi agar member lebih mudah mengenali kamu.
+                    </p>
                 </div>
             </div>
 
-            <div class="table-wrap">
-                <table class="info-table">
-                    <tbody>
-                        <tr><td>Email</td><td>${escapeHtml(trainerEmail)}</td></tr>
-                        <tr><td>Nomor HP</td><td>${escapeHtml(trainerPhone || '-')}</td></tr>
-                        <tr><td>Tarif PT</td><td style="color:var(--lime);font-weight:800">Rp${trainerPrice} / sesi</td></tr>
-                        <tr><td>Deskripsi</td><td>${escapeHtml(trainerDescription || '-')}</td></tr>
-                    </tbody>
-                </table>
-            </div>
+            <form
+                method="POST"
+                action="${@json(route('pt.profile.photo.update'))}"
+                enctype="multipart/form-data"
+            >
+                <input type="hidden" name="_token" value="${csrfToken}">
+
+                <div class="field">
+                    <label for="pt_photo">Pilih Foto Profil</label>
+
+                    <input
+                        type="file"
+                        id="pt_photo"
+                        name="photo"
+                        accept=".jpg,.jpeg,.png,.webp"
+                        required
+                    >
+
+                    <small style="color:var(--muted)">
+                        Format JPG, JPEG, PNG, atau WEBP. Maksimal 2 MB.
+                    </small>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn primary">
+                        Upload Foto
+                    </button>
+                </div>
+            </form>
         </section>
 
         <section class="panel" style="max-width:850px">

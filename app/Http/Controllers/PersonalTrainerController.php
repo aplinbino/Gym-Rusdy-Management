@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class PersonalTrainerController extends Controller
@@ -262,6 +263,50 @@ class PersonalTrainerController extends Controller
             ->with('success', 'Profil berhasil diperbarui.')
             ->with('open_pt_profile', true);
     }
+
+            /**
+         * Mengunggah atau mengganti foto profil Personal Trainer.
+         */
+        public function updatePhoto(Request $request)
+        {
+            $user = $request->user();
+
+            abort_unless($user && $user->role === 'pt', 403);
+
+            $pt = Pt::where('user_id', $user->id)->firstOrFail();
+
+            $validated = $request->validate([
+                'photo' => [
+                    'required',
+                    'image',
+                    'mimes:jpg,jpeg,png,webp',
+                    'max:2048',
+                ],
+            ], [
+                'photo.required' => 'Silakan pilih foto profil terlebih dahulu.',
+                'photo.image' => 'File harus berupa gambar.',
+                'photo.mimes' => 'Format foto harus JPG, JPEG, PNG, atau WEBP.',
+                'photo.max' => 'Ukuran foto maksimal 2 MB.',
+            ]);
+
+            // Simpan foto baru.
+            $photoPath = $validated['photo']->store('pt-photos', 'public');
+
+            // Hapus foto lama jika memang tersedia.
+            if ($pt->photo) {
+                Storage::disk('public')->delete($pt->photo);
+            }
+
+            // Simpan lokasi foto baru ke database.
+            $pt->update([
+                'photo' => $photoPath,
+            ]);
+
+            return redirect()
+                ->route('pt.dashboard')
+                ->with('success', 'Foto profil berhasil diperbarui.')
+                ->with('open_pt_profile', true);
+        }
 
     /**
      * Memperbarui password akun Personal Trainer yang sedang login.

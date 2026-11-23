@@ -112,7 +112,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::put('/personal-trainer/profil', [PersonalTrainerController::class, 'updateProfile'])
         ->name('pt.profile.update');
-
+    Route::post('/personal-trainer/profil/foto', [
+        PersonalTrainerController::class,
+        'updatePhoto'
+    ])->name('pt.profile.photo.update');
     Route::put('/personal-trainer/password', [PersonalTrainerController::class, 'updatePassword'])
         ->name('pt.password.update');
 
