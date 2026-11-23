@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#101510" />
-  <title>IRONHUB — Membership & Personal Trainer</title>
+  <title>GYMBRO — Membership & Personal Trainer</title>
   <style>
     :root{--bg:#101510;--panel:#171e18;--panel2:#1d261e;--text:#f4f6ef;--muted:#aab4a7;--accent:#c8f169;--line:rgba(255,255,255,.12);--danger:#ff8c8c}
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
     button{font:inherit}.page{min-height:100vh;background:radial-gradient(ellipse at 85% 10%,rgba(121,157,75,.13),transparent 32%),linear-gradient(115deg,#101510,#111912 55%,#172018)}
     .container{width:min(1120px,calc(100% - 40px));margin:auto}header{height:82px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
     .brand{display:flex;align-items:center;gap:11px;font-weight:950;letter-spacing:.12em}.brand-mark{width:34px;height:34px;display:grid;place-items:center;color:#101510;background:var(--accent);border-radius:9px;font-size:20px;transform:skew(-8deg)}
-    nav{display:flex;gap:28px;color:var(--muted);font-size:13px}nav a{color:inherit;text-decoration:none}.header-right{color:var(--muted);font-size:13px}
+    .back-dashboard{display:inline-flex;align-items:center;gap:7px;color:var(--accent);font-size:13px;font-weight:700;text-decoration:none;transition:opacity .2s}.back-dashboard:hover{opacity:.75}.header-right{color:var(--muted);font-size:13px}
     .intro{padding:48px 0 30px}.eyebrow{color:var(--accent);font-size:11px;font-weight:900;letter-spacing:.2em;text-transform:uppercase}.intro h1{font-size:clamp(34px,5vw,54px);line-height:1.02;letter-spacing:-.055em;margin:13px 0}.intro h1 span{color:var(--accent)}.intro p{color:var(--muted);max-width:650px;line-height:1.7;margin:0}
     .section{margin:26px 0 34px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:17px}.section h2{font-size:21px;letter-spacing:-.03em;margin:0}.section-sub{font-size:12px;color:var(--muted);margin-top:6px}.step{color:var(--accent);font-size:11px;font-weight:900;letter-spacing:.13em}
     .plans{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.plan{background:rgba(23,30,24,.88);border:1px solid var(--line);border-radius:12px;padding:19px;text-align:left;color:var(--text);cursor:pointer;transition:.2s;min-height:126px}.plan:hover,.trainer:hover,.slot:hover{border-color:rgba(200,241,105,.6);transform:translateY(-2px)}.plan.selected,.trainer.selected,.slot.selected{border-color:var(--accent);background:rgba(200,241,105,.08);box-shadow:0 0 0 1px rgba(200,241,105,.12)}.plan .duration{font-size:17px;font-weight:850}.plan .price{font-size:22px;font-weight:900;color:var(--accent);margin:12px 0 3px}.plan .per{font-size:11px;color:var(--muted)}
@@ -50,19 +50,22 @@
     @media(max-width:420px){.calendar{gap:4px}.calendar-day{min-height:35px}.calendar-heading{align-items:flex-start}.calendar-nav{width:100%;justify-content:space-between}}
     .summary{display:grid;grid-template-columns:1fr 330px;gap:20px;align-items:start;margin:36px 0 60px}.summary-info,.summary-card{background:rgba(23,30,24,.9);border:1px solid var(--line);border-radius:13px;padding:21px}.summary-info h2{font-size:20px;margin:0 0 8px}.summary-info p{color:var(--muted);font-size:12px;line-height:1.7;margin:0}.summary-card h3{font-size:15px;margin:0 0 17px}.line-item{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px;margin:12px 0}.line-item strong{color:var(--text);text-align:right}.total{border-top:1px solid var(--line);padding-top:15px;margin-top:16px;font-size:14px;color:var(--text);font-weight:850}.total strong{font-size:23px;color:var(--accent)}.pay{width:100%;border:0;border-radius:8px;background:var(--accent);color:#11170d;font-weight:950;padding:15px;margin-top:17px;cursor:pointer;transition:.2s}.pay:hover{background:#d8ff85;transform:translateY(-1px)}.pay:disabled{opacity:.4;cursor:not-allowed;transform:none}.fineprint{font-size:10px;color:var(--muted);line-height:1.5;margin:10px 0 0}.toast{display:none;margin-top:12px;padding:11px;border-radius:8px;background:rgba(200,241,105,.12);border:1px solid rgba(200,241,105,.3);color:var(--accent);font-size:12px}.toast.show{display:block}footer{border-top:1px solid var(--line);padding:20px 0 28px;color:#7f8a7c;font-size:10px;letter-spacing:.13em;display:flex;justify-content:space-between;gap:12px}
     @media(max-width:800px){.plans{grid-template-columns:repeat(2,1fr)}.trainer{flex-basis:calc((100% - 15px)/2)}.summary{grid-template-columns:1fr}.summary-card{max-width:none}}
-    @media(max-width:560px){.container{width:calc(100% - 30px)}header{height:70px}nav{display:none}.intro{padding-top:35px}.trainer{flex-basis:85%;min-width:250px}.trainer img{height:220px}.slots{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.plan{padding:15px;min-height:115px}.plan .price{font-size:19px}footer{flex-direction:column}}
+    @media(max-width:560px){.container{width:calc(100% - 30px)}header{height:70px}.intro{padding-top:35px}.trainer{flex-basis:85%;min-width:250px}.trainer img{height:220px}.slots{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.plan{padding:15px;min-height:115px}.plan .price{font-size:19px}footer{flex-direction:column}}
   </style>
 </head>
 <body>
 <div class="page">
   <div class="container">
     <header>
-      <a class="brand" href="#top"><span class="brand-mark">I</span><span>IRONHUB</span></a>
-      <nav><a href="#membership">Membership</a><a href="#trainer">Personal Trainer</a><a href="#summary">Pembayaran</a></nav>
-      <div class="header-right">MEMBER AREA&nbsp; / &nbsp;CHECKOUT</div>
+      <a class="brand" href="#top"><span class="brand-mark">G</span><span>GYMBRO</span></a>
+      <a class="back-dashboard" href="{{ route('user.dashboard_user') }}">← Kembali ke Dashboard</a>
     </header>
 
     <main id="top">
+      <form id="checkoutForm" method="POST" action="{{ route('membership.store') }}">
+        @csrf
+        <input type="hidden" name="months" id="monthsInput" value="1">
+        <input type="hidden" name="pt_id" id="ptIdInput" value="">
       <section class="intro">
         <div class="eyebrow">Build your strength</div>
         <h1>PILIH PROGRAM.<br><span>MULAI PROGRES.</span></h1>
@@ -72,36 +75,41 @@
       <section class="section" id="membership">
         <div class="section-head"><div><div class="step">01 / MEMBERSHIP</div><h2>Pilih durasi membership</h2><div class="section-sub">Semakin lama durasi membership, semakin hemat biaya per bulannya.</div></div></div>
         <div class="plans" id="plans">
-          <button class="plan selected" data-months="1" data-price="350000"><div class="duration">1 Bulan</div><div class="price">Rp350.000</div><div class="per">Rp350.000 / bulan</div></button>
-          <button class="plan" data-months="3" data-price="950000"><div class="duration">3 Bulan</div><div class="price">Rp950.000</div><div class="per">Rp316.667 / bulan</div></button>
-          <button class="plan" data-months="6" data-price="1750000"><div class="duration">6 Bulan</div><div class="price">Rp1.750.000</div><div class="per">Rp291.667 / bulan</div></button>
-          <button class="plan" data-months="12" data-price="3200000"><div class="duration">1 Tahun</div><div class="price">Rp3.200.000</div><div class="per">Rp266.667 / bulan</div></button>
+          <button class="plan selected" data-months="1" data-price="150000" type="button"><div class="duration">1 Bulan</div><div class="price">Rp150.000</div><div class="per">Rp150.000 / bulan</div></button>
+          <button class="plan" data-months="3" data-price="400000" type="button"><div class="duration">3 Bulan</div><div class="price">Rp400.000</div><div class="per">Rp133.333 / bulan</div></button>
+          <button class="plan" data-months="6" data-price="700000" type="button"><div class="duration">6 Bulan</div><div class="price">Rp700.000</div><div class="per">Rp116.667 / bulan</div></button>
+          <button class="plan" data-months="12" data-price="1200000" type="button"><div class="duration">1 Tahun</div><div class="price">Rp1.200.000</div><div class="per">Rp100.000 / bulan</div></button>
         </div>
       </section>
 
       <section class="section" id="trainer">
         <div class="section-head"><div><div class="step">02 / PERSONAL TRAINER</div><h2>Pilih personal trainer</h2><div class="section-sub">Pilih trainer jika ingin didampingi, atau lanjutkan tanpa personal trainer. Biaya PT dihitung berdasarkan jumlah sesi.</div></div></div>
-        <p class="calendar-help" style="margin:0 0 10px">Geser ke kanan atau kiri untuk melihat semua personal trainer.</p>\n        <div class="trainers" id="trainers">
-          <button class="trainer" data-trainer="Adit Otot Kawat" data-fee="100000">
-            <img src="{{ asset('images/cuking_gym.png') }}" alt="Personal trainer Rizky sedang berlatih" />
-            <div class="trainer-info"><div class="trainer-top"><h3>Adit Otot Kawat</h3><span class="tag">PPL</span></div><p>Fokus pada pembentukan otot dan progressive overload. Membantu member membangun rutinitas latihan yang konsisten.</p><div class="trainer-meta"><span>Pengalaman</span><strong>5 Tahun</strong></div><div class="trainer-meta" style="margin-top:7px"><span>Biaya PT</span><strong>Rp100.000 / sesi</strong></div></div>
-          </button>
-          <button class="trainer" data-trainer="Carmen" data-fee="100000">
-            <img src="{{ asset('images/carmen.jpg') }}" alt="Personal trainer Carmen" />
-            <div class="trainer-info"><div class="trainer-top"><h3>Carmen</h3><span class="tag">UL</span></div><p>Berpengalaman mendampingi program upper-lower split, peningkatan kekuatan, dan perbaikan teknik gerakan.</p><div class="trainer-meta"><span>Pengalaman</span><strong>4 Tahun</strong></div><div class="trainer-meta" style="margin-top:7px"><span>Biaya PT</span><strong>Rp100.000 / sesi</strong></div></div>
-          </button>
-          <button class="trainer" data-trainer="Dimas Alvaro" data-fee="100000">
-            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=85" alt="Personal trainer Dimas di gym" />
-            <div class="trainer-info"><div class="trainer-top"><h3>Dimas Alvaro</h3><span class="tag">PPL / UL</span></div><p>Membantu member menyusun program latihan sesuai target, mulai dari membangun massa otot hingga kebugaran umum.</p><div class="trainer-meta"><span>Pengalaman</span><strong>6 Tahun</strong></div><div class="trainer-meta" style="margin-top:7px"><span>Biaya PT</span><strong>Rp100.000 / sesi</strong></div></div>
-          </button>
-          <button class="trainer" data-trainer="Arga Mahendra" data-fee="100000">
-            <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=85" alt="Personal trainer Arga sedang berlatih" />
-            <div class="trainer-info"><div class="trainer-top"><h3>Arga Mahendra</h3><span class="tag">UL</span></div><p>Fokus pada peningkatan kekuatan tubuh bagian atas dan bawah, teknik latihan, serta progres beban bertahap.</p><div class="trainer-meta"><span>Pengalaman</span><strong>3 Tahun</strong></div><div class="trainer-meta" style="margin-top:7px"><span>Biaya PT</span><strong>Rp100.000 / sesi</strong></div></div>
-          </button>
-          <button class="trainer" data-trainer="Fajar Ramadhan" data-fee="100000">
-            <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=85" alt="Personal trainer Fajar di gym" />
-            <div class="trainer-info"><div class="trainer-top"><h3>Fajar Ramadhan</h3><span class="tag">PPL / UL</span></div><p>Mendampingi program pembentukan otot dan kebugaran dengan penyesuaian intensitas sesuai kemampuan member.</p><div class="trainer-meta"><span>Pengalaman</span><strong>5 Tahun</strong></div><div class="trainer-meta" style="margin-top:7px"><span>Biaya PT</span><strong>Rp100.000 / sesi</strong></div></div>
-          </button>
+        <p class="calendar-help" style="margin:0 0 10px">Geser ke kanan atau kiri untuk melihat semua personal trainer.</p>
+        <div class="trainers" id="trainers">
+          @forelse ($pts as $pt)
+            <button type="button" class="trainer"
+                    data-pt-id="{{ $pt->id }}"
+                    data-trainer="{{ $pt->pt_name }}"
+                    data-fee="{{ $pt->price_per_session }}">
+              <img
+                src="{{ $pt->photo ? asset('storage/' . $pt->photo) : asset('images/cuking_gym.png') }}"
+                alt="Personal trainer {{ $pt->pt_name }}"
+                onerror="this.onerror=null;this.src='{{ asset('images/cuking_gym.png') }}';"
+              />
+              <div class="trainer-info">
+                <div class="trainer-top">
+                  <h3>{{ $pt->pt_name }}</h3>
+                </div>
+                <p>{{ $pt->description ?: 'Personal Trainer GYMBRO' }}</p>
+                <div class="trainer-meta" style="margin-top:7px">
+                  <span>Biaya PT</span>
+                  <strong>Rp{{ number_format($pt->price_per_session, 0, ',', '.') }} / sesi</strong>
+                </div>
+              </div>
+            </button>
+          @empty
+            <div class="empty">Belum ada Personal Trainer yang tersedia saat ini.</div>
+          @endforelse
         </div>
         <div class="pt-options">
           <button type="button" class="no-trainer" id="noTrainer">Lanjut tanpa Personal Trainer <span>Membership saja</span></button>
@@ -116,11 +124,17 @@
             </div>
           </div>
           <div class="calendar" id="sessionCalendar"></div>
+          <div class="slot-picker" style="margin-top:16px">
+            <label style="display:block;font-size:12px;font-weight:850;margin-bottom:9px">Pilih jam yang tersedia</label>
+            <div class="slots" id="availableSlots">
+              <div class="empty">Pilih personal trainer dan tanggal terlebih dahulu.</div>
+            </div>
+          </div>
           <div class="selected-dates">
             <div class="selected-dates-head"><strong>Tanggal sesi dipilih</strong><span id="sessionCountLabel">0 sesi</span></div>
             <div id="selectedDatesList" class="selected-dates-list">Belum ada tanggal yang dipilih.</div>
           </div>
-          <p class="calendar-help">Pilih beberapa tanggal pada kalender. Setiap tanggal yang dipilih dihitung sebagai satu sesi PT. Tanggal dibatasi sesuai masa membership.</p>
+          <p class="calendar-help">Pilih tanggal yang tersedia, lalu pilih jam latihan. Setiap tanggal hanya dapat dipilih untuk satu sesi PT. Slot yang sudah dipesan tidak akan ditampilkan.</p>
         </div>
       </section>
 
@@ -129,166 +143,386 @@
         <div class="summary-card">
           <h3>Rincian pembayaran</h3>
           <div class="line-item"><span>Membership</span><strong id="membershipLabel">1 Bulan</strong></div>
-          <div class="line-item"><span>Biaya membership</span><strong id="membershipCost">Rp350.000</strong></div>
+          <div class="line-item"><span>Biaya membership</span><strong id="membershipCost">Rp150.000</strong></div>
           <div class="line-item"><span>Personal trainer</span><strong id="trainerLabel">Tanpa PT</strong></div>
           <div class="line-item"><span>Jumlah sesi PT</span><strong id="sessionLabel">0 sesi</strong></div>
           <div class="line-item"><span>Biaya PT</span><strong id="trainerCost">Rp0</strong></div>
-          <div class="line-item total"><span>Total pembayaran</span><strong id="totalCost">Rp350.000</strong></div>
-          <button class="pay" id="payButton" disabled>Bayar Sekarang&nbsp; ↗</button>
-          <p class="fineprint">*Harga di halaman ini merupakan contoh untuk prototype. Integrasikan tombol pembayaran dengan payment gateway pada tahap backend.</p>
+          <div class="line-item total"><span>Total pembayaran</span><strong id="totalCost">Rp150.000</strong></div>
+          <button type="submit" class="pay" id="payButton">Bayar Sekarang&nbsp; ↗</button>
+          <p class="fineprint">*Membership dan sesi PT akan diproses oleh sistem setelah checkout berhasil. Harga akhir dihitung kembali oleh server.</p>
           <div class="toast" id="toast" role="status"></div>
         </div>
       </section>
-      <footer><span>© 2026 IRONHUB FITNESS CLUB</span><span>TRAIN HARD · STAY HUMBLE · KEEP GROWING</span></footer>
+      </form>
+      <footer><span>© 2026 GYMBRO FITNESS CLUB</span><span>TRAIN HARD · STAY HUMBLE · KEEP GROWING</span></footer>
     </main>
   </div>
 </div>
 <script>
-  let selectedPlan = {months:1,price:350000};
+  let selectedPlan = {months:1,price:150000};
+  let planChosen = true;
   let selectedTrainer = null;
   let useTrainer = false;
-  let selectedDates = [];
+  let selectedSlots = [];
+  let activeDate = null;
   let calendarCursor = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+
+  // Data slot tersedia dikirim dari route GET /membership.
+  const availabilityData = @json($availabilities);
 
   const rupiah = value => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(value);
   const trainerButtons = document.querySelectorAll('.trainer');
   const noTrainerButton = document.getElementById('noTrainer');
   const sessionPicker = document.getElementById('sessionPicker');
+  const slotContainer = document.getElementById('availableSlots');
 
   const startDate = () => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), now.getDate());
   };
+
   const membershipEndDate = () => {
     const start = startDate();
     const end = new Date(start);
     end.setMonth(end.getMonth() + selectedPlan.months);
     return end;
   };
+
   const dateKey = date => {
     const y = date.getFullYear();
     const m = String(date.getMonth()+1).padStart(2,'0');
     const d = String(date.getDate()).padStart(2,'0');
     return `${y}-${m}-${d}`;
   };
+
   const parseDateKey = key => {
     const [y,m,d] = key.split('-').map(Number);
     return new Date(y,m-1,d);
   };
-  const formatDate = key => new Intl.DateTimeFormat('id-ID',{weekday:'short',day:'numeric',month:'short',year:'numeric'}).format(parseDateKey(key));
-  const monthName = date => new Intl.DateTimeFormat('id-ID',{month:'long',year:'numeric'}).format(date);
+
+  const formatDate = key => new Intl.DateTimeFormat('id-ID',{
+    weekday:'short',day:'numeric',month:'short',year:'numeric'
+  }).format(parseDateKey(key));
+
+  const monthName = date => new Intl.DateTimeFormat('id-ID',{
+    month:'long',year:'numeric'
+  }).format(date);
+
+  // Ambil slot milik PT yang sedang dipilih.
+  const getTrainerSlots = () => {
+    if (!selectedTrainer) return [];
+
+    const minKey = dateKey(startDate());
+    const maxKey = dateKey(membershipEndDate());
+
+    return availabilityData
+      .filter(slot => Number(slot.pt_id) === selectedTrainer.id)
+      .filter(slot => {
+        const key = String(slot.start_at).slice(0,10);
+        return key >= minKey && key < maxKey;
+      })
+      .sort((a,b) => String(a.start_at).localeCompare(String(b.start_at)));
+  };
+
+  const getSlotsForDate = key => getTrainerSlots().filter(
+    slot => String(slot.start_at).slice(0,10) === key
+  );
+
+  const getSlotTime = value => String(value).slice(11,16);
+
+  function renderSlotOptions() {
+    if (!useTrainer || !selectedTrainer) {
+      slotContainer.innerHTML = '<div class="empty">Pilih personal trainer terlebih dahulu.</div>';
+      return;
+    }
+
+    if (!activeDate) {
+      slotContainer.innerHTML = '<div class="empty">Pilih tanggal yang tersedia pada kalender.</div>';
+      return;
+    }
+
+    const slots = getSlotsForDate(activeDate);
+
+    if (!slots.length) {
+      slotContainer.innerHTML = '<div class="empty">Tidak ada slot tersedia pada tanggal ini.</div>';
+      return;
+    }
+
+    slotContainer.innerHTML = slots.map(slot => {
+      const isSelected = selectedSlots.some(item => Number(item.id) === Number(slot.id));
+      return `
+        <button type="button"
+          class="slot${isSelected ? ' selected' : ''}"
+          data-slot-id="${Number(slot.id)}"
+          aria-pressed="${isSelected}">
+          <div>
+            <div class="slot-day">${formatDate(activeDate)}</div>
+            <div class="slot-time">${getSlotTime(slot.start_at)} – ${getSlotTime(slot.end_at)} WIB</div>
+          </div>
+          <div class="slot-workout">${isSelected ? 'Dipilih ✓' : 'Pilih sesi'}</div>
+        </button>
+      `;
+    }).join('');
+
+    slotContainer.querySelectorAll('[data-slot-id]').forEach(button => {
+      button.addEventListener('click', () => {
+        const slotId = Number(button.dataset.slotId);
+        const existingIndex = selectedSlots.findIndex(
+          item => String(item.start_at).slice(0,10) === activeDate
+        );
+
+        // Maksimal satu sesi per tanggal. Klik slot yang sama untuk membatalkan pilihan.
+        if (existingIndex !== -1 && Number(selectedSlots[existingIndex].id) === slotId) {
+          selectedSlots.splice(existingIndex, 1);
+        } else {
+          const chosenSlot = slots.find(item => Number(item.id) === slotId);
+          if (!chosenSlot) return;
+
+          if (existingIndex !== -1) {
+            selectedSlots.splice(existingIndex, 1);
+          }
+          selectedSlots.push(chosenSlot);
+        }
+
+        selectedSlots.sort((a,b) => String(a.start_at).localeCompare(String(b.start_at)));
+        renderCalendar();
+        renderSlotOptions();
+        renderSelectedSlots();
+        updateSummary();
+      });
+    });
+  }
+
+  function renderSelectedSlots() {
+    const list = document.getElementById('selectedDatesList');
+
+    if (!selectedSlots.length) {
+      list.innerHTML = 'Belum ada slot yang dipilih.';
+    } else {
+      list.innerHTML = selectedSlots.map((slot,index) => {
+        const key = String(slot.start_at).slice(0,10);
+        return `
+          <div class="date-chip" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span>${formatDate(key)} · ${getSlotTime(slot.start_at)} WIB</span>
+            <button type="button" data-remove-slot="${Number(slot.id)}"
+              style="border:0;background:transparent;color:var(--danger);cursor:pointer;font-weight:900">×</button>
+            <input type="hidden" name="sessions[${index}][availability_id]" value="${Number(slot.id)}">
+          </div>
+        `;
+      }).join('');
+
+      list.querySelectorAll('[data-remove-slot]').forEach(button => {
+        button.addEventListener('click', () => {
+          const slotId = Number(button.dataset.removeSlot);
+          selectedSlots = selectedSlots.filter(item => Number(item.id) !== slotId);
+          renderCalendar();
+          renderSlotOptions();
+          renderSelectedSlots();
+          updateSummary();
+        });
+      });
+    }
+
+    document.getElementById('sessionCountLabel').textContent = `${selectedSlots.length} sesi`;
+  }
 
   document.querySelectorAll('.plan').forEach(button => button.addEventListener('click', () => {
+    const isSamePlan = button.classList.contains('selected');
     document.querySelectorAll('.plan').forEach(item => item.classList.remove('selected'));
-    button.classList.add('selected');
-    selectedPlan = {months:Number(button.dataset.months),price:Number(button.dataset.price)};
-    // Keep only sessions that remain inside the newly selected membership period.
-    const endKey = dateKey(membershipEndDate());
-    selectedDates = selectedDates.filter(key => key >= dateKey(startDate()) && key < endKey);
+
+    // Klik kedua pada durasi yang sama akan melepas pilihan Membership.
+    if (isSamePlan) {
+      planChosen = false;
+      document.getElementById('monthsInput').value = '';
+
+      trainerButtons.forEach(item => item.classList.remove('selected'));
+      noTrainerButton.classList.remove('selected');
+      selectedTrainer = null;
+      useTrainer = false;
+      selectedSlots = [];
+      activeDate = null;
+      document.getElementById('ptIdInput').value = '';
+      sessionPicker.classList.add('disabled');
+    } else {
+      planChosen = true;
+      button.classList.add('selected');
+      selectedPlan = {
+        months:Number(button.dataset.months),
+        price:Number(button.dataset.price)
+      };
+      document.getElementById('monthsInput').value = selectedPlan.months;
+
+      const minKey = dateKey(startDate());
+      const maxKey = dateKey(membershipEndDate());
+      selectedSlots = selectedSlots.filter(slot => {
+        const key = String(slot.start_at).slice(0,10);
+        return key >= minKey && key < maxKey;
+      });
+      if (activeDate && (activeDate < minKey || activeDate >= maxKey)) activeDate = null;
+    }
+
+    calendarCursor = new Date(startDate().getFullYear(), startDate().getMonth(), 1);
     renderCalendar();
+    renderSlotOptions();
+    renderSelectedSlots();
     updateSummary();
   }));
 
   trainerButtons.forEach(button => button.addEventListener('click', () => {
+    const isSameTrainer = button.classList.contains('selected');
     trainerButtons.forEach(item => item.classList.remove('selected'));
-    button.classList.add('selected');
     noTrainerButton.classList.remove('selected');
-    selectedTrainer = {name:button.dataset.trainer,fee:Number(button.dataset.fee)};
-    useTrainer = true;
-    sessionPicker.classList.remove('disabled');
+
+    // Klik kedua pada PT yang sama akan melepas pilihan PT.
+    if (isSameTrainer) {
+      selectedTrainer = null;
+      useTrainer = false;
+      selectedSlots = [];
+      activeDate = null;
+      document.getElementById('ptIdInput').value = '';
+      sessionPicker.classList.add('disabled');
+    } else {
+      if (!planChosen) {
+        alert('Pilih durasi Membership terlebih dahulu.');
+        updateSummary();
+        return;
+      }
+
+      button.classList.add('selected');
+      selectedTrainer = {
+        id:Number(button.dataset.ptId),
+        name:button.dataset.trainer,
+        fee:Number(button.dataset.fee)
+      };
+      document.getElementById('ptIdInput').value = selectedTrainer.id;
+      useTrainer = true;
+      selectedSlots = [];
+      activeDate = null;
+      sessionPicker.classList.remove('disabled');
+    }
+
+    calendarCursor = new Date(startDate().getFullYear(), startDate().getMonth(), 1);
     renderCalendar();
+    renderSlotOptions();
+    renderSelectedSlots();
     updateSummary();
   }));
 
   noTrainerButton.addEventListener('click', () => {
     trainerButtons.forEach(item => item.classList.remove('selected'));
     noTrainerButton.classList.add('selected');
+
     selectedTrainer = null;
     useTrainer = false;
-    selectedDates = [];
+    selectedSlots = [];
+    activeDate = null;
+
+    document.getElementById('ptIdInput').value = '';
     sessionPicker.classList.add('disabled');
+
     renderCalendar();
+    renderSlotOptions();
+    renderSelectedSlots();
     updateSummary();
   });
 
-  function renderCalendar(){
+  function renderCalendar() {
     const calendar = document.getElementById('sessionCalendar');
-    const cursor = calendarCursor;
-    const year = cursor.getFullYear();
-    const month = cursor.getMonth();
+    const year = calendarCursor.getFullYear();
+    const month = calendarCursor.getMonth();
     const firstDay = new Date(year,month,1).getDay();
     const daysInMonth = new Date(year,month+1,0).getDate();
     const minKey = dateKey(startDate());
     const maxKey = dateKey(membershipEndDate());
 
-    document.getElementById('calendarMonthLabel').textContent = monthName(cursor);
+    document.getElementById('calendarMonthLabel').textContent = monthName(calendarCursor);
     document.getElementById('calendarRangeText').textContent =
       `Masa berlaku pilihan: ${formatDate(minKey)} sampai ${formatDate(dateKey(new Date(membershipEndDate().getFullYear(),membershipEndDate().getMonth(),membershipEndDate().getDate()-1)))}.`;
+
     document.getElementById('prevMonth').disabled =
       new Date(year,month,1) <= new Date(startDate().getFullYear(),startDate().getMonth(),1);
     document.getElementById('nextMonth').disabled =
       new Date(year,month+1,1) >= new Date(membershipEndDate().getFullYear(),membershipEndDate().getMonth(),1);
 
-    let markup = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'].map(day=>`<div class="calendar-weekday">${day}</div>`).join('');
-    for(let i=0;i<firstDay;i++) markup += '<div class="calendar-day empty-day"></div>';
-    for(let day=1;day<=daysInMonth;day++){
+    let markup = ['Min','Sen','Sel','Rab','Kam','Jum','Sab']
+      .map(day => `<div class="calendar-weekday">${day}</div>`).join('');
+
+    for (let i=0; i<firstDay; i++) {
+      markup += '<div class="calendar-day empty-day"></div>';
+    }
+
+    for (let day=1; day<=daysInMonth; day++) {
       const date = new Date(year,month,day);
       const key = dateKey(date);
-      const unavailable = key < minKey || key >= maxKey || !useTrainer;
-      const selected = selectedDates.includes(key);
-      markup += `<button type="button" class="calendar-day${selected?' selected':''}" data-date="${key}" ${unavailable?'disabled':''} aria-pressed="${selected}">${day}</button>`;
-    }
-    calendar.innerHTML = markup;
-    calendar.querySelectorAll('[data-date]').forEach(button=>button.addEventListener('click',()=>{
-      const key = button.dataset.date;
-      if(selectedDates.includes(key)) selectedDates = selectedDates.filter(item=>item!==key);
-      else selectedDates.push(key);
-      selectedDates.sort();
-      renderCalendar();
-      updateSummary();
-    }));
+      const hasSlots = useTrainer && getSlotsForDate(key).length > 0;
+      const selected = selectedSlots.some(slot => String(slot.start_at).slice(0,10) === key);
+      const unavailable = key < minKey || key >= maxKey || !hasSlots;
 
-    const list = document.getElementById('selectedDatesList');
-    list.innerHTML = selectedDates.length
-      ? selectedDates.map(key=>`<span class="date-chip">${formatDate(key)}</span>`).join('')
-      : 'Belum ada tanggal yang dipilih.';
-    document.getElementById('sessionCountLabel').textContent = `${selectedDates.length} sesi`;
+      markup += `
+        <button type="button"
+          class="calendar-day${selected ? ' selected' : ''}"
+          data-date="${key}"
+          ${unavailable ? 'disabled' : ''}
+          aria-pressed="${selected}">${day}</button>
+      `;
+    }
+
+    calendar.innerHTML = markup;
+
+    calendar.querySelectorAll('[data-date]').forEach(button => {
+      button.addEventListener('click', () => {
+        activeDate = button.dataset.date;
+        renderCalendar();
+        renderSlotOptions();
+      });
+    });
   }
 
-  document.getElementById('prevMonth').addEventListener('click',()=>{
+  document.getElementById('prevMonth').addEventListener('click', () => {
     calendarCursor = new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()-1,1);
     renderCalendar();
   });
-  document.getElementById('nextMonth').addEventListener('click',()=>{
+
+  document.getElementById('nextMonth').addEventListener('click', () => {
     calendarCursor = new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+1,1);
     renderCalendar();
   });
 
-  function updateSummary(){
-    const sessionCount = useTrainer ? selectedDates.length : 0;
-    const trainerFee = useTrainer && selectedTrainer ? selectedTrainer.fee * sessionCount : 0;
-    document.getElementById('membershipLabel').textContent = selectedPlan.months===12?'1 Tahun':selectedPlan.months+' Bulan';
-    document.getElementById('membershipCost').textContent = rupiah(selectedPlan.price);
-    document.getElementById('trainerLabel').textContent = useTrainer && selectedTrainer ? selectedTrainer.name : 'Tanpa PT';
+  function updateSummary() {
+    const sessionCount = useTrainer ? selectedSlots.length : 0;
+    const trainerFee = useTrainer && selectedTrainer
+      ? selectedTrainer.fee * sessionCount
+      : 0;
+
+    document.getElementById('membershipLabel').textContent = planChosen
+      ? (selectedPlan.months===12 ? '1 Tahun' : selectedPlan.months+' Bulan')
+      : 'Belum dipilih';
+    document.getElementById('membershipCost').textContent = rupiah(planChosen ? selectedPlan.price : 0);
+    document.getElementById('trainerLabel').textContent =
+      useTrainer && selectedTrainer ? selectedTrainer.name : 'Tanpa PT';
     document.getElementById('sessionLabel').textContent = sessionCount+' sesi';
     document.getElementById('trainerCost').textContent = rupiah(trainerFee);
-    document.getElementById('totalCost').textContent = rupiah(selectedPlan.price + trainerFee);
-    document.getElementById('payButton').disabled = useTrainer && (!selectedTrainer || selectedDates.length===0);
+    document.getElementById('totalCost').textContent = rupiah((planChosen ? selectedPlan.price : 0) + trainerFee);
+
+    document.getElementById('payButton').disabled =
+      !planChosen || (useTrainer && (!selectedTrainer || selectedSlots.length === 0));
   }
 
-  document.getElementById('payButton').addEventListener('click',()=>{
-    const sessionCount = useTrainer ? selectedDates.length : 0;
-    const trainerFee = useTrainer && selectedTrainer ? selectedTrainer.fee * sessionCount : 0;
-    const total = selectedPlan.price + trainerFee;
-    const sessionText = selectedDates.map(formatDate).join(', ');
-    const message = `Pesanan IRONHUB\nMembership: ${selectedPlan.months} bulan\nPT: ${useTrainer && selectedTrainer ? selectedTrainer.name : 'Tanpa PT'}\nTanggal sesi PT: ${useTrainer ? sessionText : 'Tidak memilih PT'}\nJumlah sesi PT: ${sessionCount}\nTotal: ${rupiah(total)}`;
-    const toast = document.getElementById('toast');
-    toast.textContent = 'Pilihan berhasil disiapkan. Pada aplikasi sebenarnya, lanjutkan ke halaman payment gateway. Total: '+rupiah(total)+'.';
-    toast.classList.add('show');
-    console.log(message);
+  document.getElementById('checkoutForm').addEventListener('submit', event => {
+    if (!planChosen) {
+      event.preventDefault();
+      alert('Pilih durasi Membership terlebih dahulu.');
+      return;
+    }
+    if (useTrainer && (!selectedTrainer || selectedSlots.length === 0)) {
+      event.preventDefault();
+      alert('Pilih personal trainer dan minimal satu slot jadwal yang tersedia.');
+    }
   });
 
   renderCalendar();
+  renderSlotOptions();
+  renderSelectedSlots();
   updateSummary();
 </script>
 </body>

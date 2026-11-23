@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Personal Trainer | IRONHUB</title>
+<title>Personal Trainer | GYMBRO</title>
 
 <style>
 :root {
@@ -77,6 +77,31 @@ button, input, select {
     font-size: 11px;
     color: var(--muted);
 }
+
+.logout-form {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+}
+
+.logout-btn {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: transparent;
+    color: var(--text);
+    padding: 9px 12px;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.logout-btn:hover {
+    border-color: var(--lime);
+    color: var(--lime);
+    background: #293b25;
+}
+
 
 .role {
     color: var(--lime);
@@ -734,7 +759,8 @@ footer {
 }
 
 .field input,
-.field select {
+.field select,
+.field textarea {
     width: 100%;
     padding: 11px;
     background: var(--bg);
@@ -745,8 +771,20 @@ footer {
 }
 
 .field input:focus,
-.field select:focus {
+.field select:focus,
+.field textarea:focus {
     border-color: var(--lime);
+}
+
+.field textarea {
+    min-height: 90px;
+    resize: vertical;
+    padding: 11px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    color: white;
+    outline: none;
 }
 
 .price-note {
@@ -878,13 +916,19 @@ footer {
 <header class="topbar">
     <div class="brand">
         <span class="logo">I</span>
-        IRONHUB
+        GYMBRO
     </div>
 
     <div class="top-right">
         <span class="role">PERSONAL TRAINER</span>
-        <div class="avatar">AR</div>
-        <span>Andi Ramadhan</span>
+        <div class="avatar">{{ collect(explode(' ', $user->name))->filter()->take(2)->map(fn ($word) => strtoupper(substr($word, 0, 1)))->implode('') }}</div>
+        <span>{{ $user->name }}</span>
+
+        <form class="logout-form" method="POST" action="{{ route('logout') }}"
+              onsubmit="return confirm('Yakin ingin logout dari akun PT?')">
+            @csrf
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
     </div>
 </header>
 
@@ -901,6 +945,10 @@ footer {
         <span class="ico">▣</span>Jadwal Latihan
     </button>
 
+    <button class="nav" data-page="ketersediaan">
+        <span class="ico">◷</span>Ketersediaan
+    </button>
+
     <button class="nav" data-page="anggota">
         <span class="ico">♙</span>Anggota Saya
     </button>
@@ -914,211 +962,118 @@ footer {
     </button>
 
     <div class="sidebar-note">
-        <strong>IRONHUB TRAINER</strong>
+        <strong>GYMBRO TRAINER</strong>
         Kelola jadwal sesi latihan dan pantau perkembangan anggota dengan lebih mudah.
     </div>
 </aside>
 
-<main id="content"></main>
+<main>
+    @if (session('success'))
+        <div class="panel" style="border-color:#647a43;color:var(--lime);margin-bottom:16px;">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="panel" style="border-color:#9b4848;color:#ffaaaa;margin-bottom:16px;">
+            <strong>Periksa kembali data yang dimasukkan:</strong>
+            <ul style="margin:8px 0 0 18px;line-height:1.7;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div id="content"></div>
+</main>
 
 </div>
 
 <footer>
-    © 2026 IRONHUB FITNESS CLUB · TRAIN HARD. STAY HUMBLE. KEEP GROWING.
+    © 2026 GYMBRO FITNESS CLUB · TRAIN HARD. STAY HUMBLE. KEEP GROWING.
 </footer>
 
 <!-- MODAL JADWAL -->
 <div class="modal-bg" id="modal">
 
-    <form class="modal" id="form">
+    <form class="modal" id="form" method="POST">
+        @csrf
+        @method('PATCH')
 
-        <h2 id="modalTitle">Atur Jadwal Sesi</h2>
+        <h2 id="modalTitle">Ubah Jadwal Sesi</h2>
 
         <p class="modal-description">
-            Setiap jadwal mewakili satu sesi personal training anggota.
+            Ubah program, status, dan catatan sesi latihan. Tanggal serta jam
+            mengikuti slot booking member dan tidak dapat diubah dari halaman ini.
         </p>
 
         <div class="field">
             <label>Nama Anggota</label>
-            <select id="member" required>
-                <option value="">Pilih anggota</option>
-            </select>
+            <input type="text" id="member" readonly>
         </div>
 
         <div class="field">
             <label>Tanggal Latihan</label>
-            <input type="date" id="date" required>
+            <input type="text" id="date" readonly>
         </div>
 
         <div class="field">
-            <label>Jam Mulai</label>
-            <input type="time" id="start" required>
+            <label>Waktu Latihan</label>
+            <input type="text" id="time" readonly>
         </div>
 
         <div class="field">
-            <label>Jam Selesai</label>
-            <input type="time" id="end" required>
-        </div>
-
-        <div class="field">
-            <label>Program Latihan</label>
-            <select id="workout">
-                <option>Upper Body</option>
-                <option>Lower Body</option>
-                <option>Push Day</option>
-                <option>Pull Day</option>
-                <option>Leg Day</option>
-                <option>Full Body</option>
-                <option>Cardio</option>
+            <label for="workout">Program Latihan</label>
+            <select id="workout" name="jenis_latihan" required>
+                <option value="Upper Body">Upper Body</option>
+                <option value="Lower Body">Lower Body</option>
+                <option value="Full Body">Full Body</option>
+                <option value="Cardio">Cardio</option>
+                <option value="Personal Training">Personal Training</option>
             </select>
         </div>
 
         <div class="field">
-            <label>Status Sesi</label>
-            <select id="status">
-                <option value="Dikonfirmasi">Dikonfirmasi</option>
-                <option value="Selesai">Selesai</option>
-                <option value="Dibatalkan">Dibatalkan</option>
+            <label for="status">Status Sesi</label>
+            <select id="status" name="status" required>
+                <option value="approved">Dikonfirmasi</option>
+                <option value="completed">Selesai</option>
             </select>
         </div>
 
-        <div class="price-note">
-            <span>Tarif Personal Training per sesi</span>
-            <strong>Rp100.000</strong>
+        <div class="field">
+            <label for="catatan">Catatan Latihan</label>
+            <textarea id="catatan" name="catatan" maxlength="1000"
+                placeholder="Tambahkan catatan untuk sesi latihan (opsional)"></textarea>
         </div>
+
 
         <div class="actions">
             <button type="button" class="btn secondary" onclick="closeModal()">
                 Batal
             </button>
-
-            <button class="btn primary">
-                Simpan Jadwal
+            <button type="submit" class="btn primary">
+                Simpan Perubahan
             </button>
         </div>
-
     </form>
 </div>
 
 <script>
 // =====================================
-// DATA DUMMY
+// DATA DARI DATABASE LARAVEL
 // =====================================
 
-const PT_PRICE = 100000;
+const PT_PRICE = {{ (int) ($pt->price_per_session ?? 100000) }};
 
-let schedules = [
-    {
-        id: 1,
-        date: "2026-11-23",
-        member: "Budi Santoso",
-        time: "10:00 - 12:00",
-        workout: "Upper Body",
-        status: "Dikonfirmasi"
-    },
-    {
-        id: 2,
-        date: "2026-11-23",
-        member: "Siti Aminah",
-        time: "14:00 - 15:00",
-        workout: "Lower Body",
-        status: "Dikonfirmasi"
-    },
-    {
-        id: 3,
-        date: "2026-11-24",
-        member: "Andi Pratama",
-        time: "09:00 - 11:00",
-        workout: "Push Day",
-        status: "Dikonfirmasi"
-    },
-    {
-        id: 4,
-        date: "2026-11-25",
-        member: "Rizky Maulana",
-        time: "13:00 - 14:00",
-        workout: "Pull Day",
-        status: "Dikonfirmasi"
-    },
-    {
-        id: 5,
-        date: "2026-11-27",
-        member: "Budi Santoso",
-        time: "10:00 - 12:00",
-        workout: "Leg Day",
-        status: "Dikonfirmasi"
-    }
-];
-
-const members = [
-    {
-        name: "Budi Santoso",
-        plan: "Membership 6 Bulan",
-        goal: "Meningkatkan massa otot",
-        progress: 75,
-        initial: "BS"
-    },
-    {
-        name: "Siti Aminah",
-        plan: "Membership 3 Bulan",
-        goal: "Menurunkan berat badan",
-        progress: 55,
-        initial: "SA"
-    },
-    {
-        name: "Andi Pratama",
-        plan: "Membership 1 Tahun",
-        goal: "Meningkatkan kekuatan",
-        progress: 82,
-        initial: "AP"
-    },
-    {
-        name: "Rizky Maulana",
-        plan: "Membership 3 Bulan",
-        goal: "Membangun kebugaran",
-        progress: 40,
-        initial: "RM"
-    }
-];
-
-const reviews = [
-    {
-        id: 1,
-        name: "Budi Santoso",
-        initial: "BS",
-        date: "12 November 2026",
-        rating: 5,
-        program: "Personal Training · Upper / Lower",
-        comment: "Latihannya terarah dan mudah dipahami. Coach Andi juga selalu memperhatikan teknik gerakan agar tidak salah posisi. Progress kekuatan saya terasa meningkat."
-    },
-    {
-        id: 2,
-        name: "Siti Aminah",
-        initial: "SA",
-        date: "10 November 2026",
-        rating: 4,
-        program: "Personal Training · Weight Loss",
-        comment: "Coach-nya sabar dan program latihannya disesuaikan dengan kemampuan saya. Akan lebih bagus kalau variasi latihan cardio ditambah."
-    },
-    {
-        id: 3,
-        name: "Andi Pratama",
-        initial: "AP",
-        date: "8 November 2026",
-        rating: 5,
-        program: "Personal Training · Strength",
-        comment: "Penjelasan setiap gerakan detail, jadwal juga selalu tepat waktu. Sangat membantu untuk memperbaiki teknik squat dan bench press."
-    },
-    {
-        id: 4,
-        name: "Rizky Maulana",
-        initial: "RM",
-        date: "5 November 2026",
-        rating: 4,
-        program: "Personal Training · Fitness",
-        comment: "Sesi latihan cukup menantang tapi tetap aman. Coach memberikan arahan yang jelas dan rutin mengevaluasi perkembangan."
-    }
-];
+let schedules = @json($schedules);
+let members = @json($members);
+const reviews = @json($reviews);
+const averageRating = @json($averageRating);
+const ratingDistribution = @json($ratingDistribution);
+const availabilities = @json($availabilities);
+const csrfToken = @json(csrf_token());
 
 let page = "dashboard";
 let editId = null;
@@ -1171,13 +1126,21 @@ function heading(k, title, description) {
     `;
 }
 
+function getStatusLabel(status) {
+    const labels = {
+        pending: "Menunggu",
+        scheduled: "Terjadwal",
+        approved: "Dikonfirmasi",
+        completed: "Selesai"
+    };
+
+    return labels[status] || status || "Belum ditentukan";
+}
+
 function getStatusBadge(status) {
-    let className = "";
+    const className = status === "completed" ? "done" : "";
 
-    if (status === "Selesai") className = "done";
-    if (status === "Dibatalkan") className = "cancelled";
-
-    return `<span class="badge ${className}">${status}</span>`;
+    return `<span class="badge ${className}">${getStatusLabel(status)}</span>`;
 }
 
 function getSortedSchedules() {
@@ -1187,19 +1150,31 @@ function getSortedSchedules() {
 }
 
 function getDuration(time) {
-    const [start, end] = time.split(" - ");
+    if (!time || !time.includes(" - ")) return 0;
 
+    const [start, end] = time.split(" - ");
     const [startHour, startMinute] = start.split(":").map(Number);
     const [endHour, endMinute] = end.split(":").map(Number);
 
-    return ((endHour * 60 + endMinute) -
+    if ([startHour, startMinute, endHour, endMinute].some(Number.isNaN)) return 0;
+
+    const duration = ((endHour * 60 + endMinute) -
         (startHour * 60 + startMinute)) / 60;
+
+    return duration > 0 ? duration : 0;
 }
 
 function getTotalHours() {
-    return schedules.reduce((total, s) => {
-        return total + getDuration(s.time);
+    // Hanya sesi yang benar-benar berstatus selesai dihitung.
+    const total = schedules.reduce((sum, schedule) => {
+        if (schedule.status !== "completed") return sum;
+
+        const duration = Number(schedule.duration_hours) || 0;
+        return sum + duration;
     }, 0);
+
+    // Tampilkan maksimal dua angka desimal tanpa nol berlebih.
+    return Number(total.toFixed(2)).toString();
 }
 
 // =====================================
@@ -1300,40 +1275,28 @@ function week() {
 function memberCards() {
     return members.map(m => `
         <div class="member">
-
             <div class="member-pic">${m.initial}</div>
-
             <div class="member-detail">
                 <b>${m.name}</b>
-                <span>${m.goal}</span>
-
-                <div class="progress">
-                    <i style="width:${m.progress}%"></i>
-                </div>
+                <span>Member Personal Training</span>
             </div>
-
         </div>
-    `).join("");
+    `).join("") || `<div class="empty">Belum ada anggota.</div>`;
 }
 
 function memberRows(list) {
-    return list.map(m => `
+    return list.map(m => {
+        const totalSessions = schedules.filter(s => s.member === m.name).length;
+
+        return `
+            <tr>
+                <td><b>${m.name}</b></td>
+                <td>${totalSessions} sesi</td>
+            </tr>
+        `;
+    }).join("") || `
         <tr>
-            <td><b>${m.name}</b></td>
-            <td>${m.plan}</td>
-            <td>${m.goal}</td>
-            <td>
-                <div style="display:flex;align-items:center;gap:8px">
-                    <div class="progress" style="width:90px">
-                        <i style="width:${m.progress}%"></i>
-                    </div>
-                    ${m.progress}%
-                </div>
-            </td>
-        </tr>
-    `).join("") || `
-        <tr>
-            <td colspan="4">Anggota tidak ditemukan.</td>
+            <td colspan="2">Anggota tidak ditemukan.</td>
         </tr>
     `;
 }
@@ -1345,7 +1308,7 @@ function memberRows(list) {
 function dashboard() {
 
     const upcoming = getSortedSchedules().filter(s => {
-        return s.status !== "Dibatalkan" &&
+        return s.status !== "completed" &&
             s.date >= getTodayString();
     });
 
@@ -1353,7 +1316,7 @@ function dashboard() {
         heading(
             "TRAINER DASHBOARD",
             "Dashboard Personal Trainer",
-            "Pantau jadwal sesi latihan, anggota, dan aktivitas coaching kamu di IRONHUB."
+            "Pantau jadwal sesi latihan, anggota, dan aktivitas coaching kamu di GYMBRO."
         ) +
 
         `
@@ -1362,7 +1325,7 @@ function dashboard() {
             <div>
                 <small>WELCOME BACK, COACH</small>
 
-                <h2>Siap melatih hari ini, Andi?</h2>
+                <h2>Siap melatih hari ini, {{ $user->name }}?</h2>
 
                 <p>
                     Pastikan setiap anggota mendapatkan sesi latihan yang terarah.
@@ -1370,11 +1333,11 @@ function dashboard() {
                 </p>
             </div>
 
-            <div class="active-pill">● TRAINER AKTIF</div>
+            <div class="active-pill">● {{ strtoupper($pt->status ?? 'AKTIF') }}</div>
 
         </section>
 
-        <section class="stats">
+        <section class="stats" style="grid-template-columns:repeat(2,minmax(0,1fr))">
 
             <div class="stat">
                 <span>Total Anggota</span>
@@ -1397,7 +1360,7 @@ function dashboard() {
             <div class="stat">
                 <span>Total Jam Melatih</span>
                 <strong>${getTotalHours()} <small>jam</small></strong>
-                <small>Akumulasi durasi jadwal</small>
+                <small>Akumulasi durasi sesi yang selesai</small>
             </div>
 
         </section>
@@ -1477,21 +1440,16 @@ function schedulePage() {
 
             <div class="stat">
                 <span>Dikonfirmasi</span>
-                <strong>${schedules.filter(s => s.status === "Dikonfirmasi").length}</strong>
+                <strong>${schedules.filter(s => ["scheduled", "approved"].includes(s.status)).length}</strong>
                 <small>Sesi terjadwal</small>
             </div>
 
             <div class="stat">
                 <span>Selesai</span>
-                <strong>${schedules.filter(s => s.status === "Selesai").length}</strong>
+                <strong>${schedules.filter(s => s.status === "completed").length}</strong>
                 <small>Sesi terlaksana</small>
             </div>
 
-            <div class="stat">
-                <span>Tarif per Sesi</span>
-                <strong style="font-size:21px">Rp100.000</strong>
-                <small>Harga tetap setiap sesi</small>
-            </div>
 
         </section>
 
@@ -1506,9 +1464,7 @@ function schedulePage() {
                     </p>
                 </div>
 
-                <button class="btn primary" onclick="openModal()">
-                    + Atur Jadwal
-                </button>
+                <span class="sub">Jadwal dibuat melalui booking member</span>
 
             </div>
 
@@ -1546,11 +1502,6 @@ function schedulePage() {
                                             onclick="editSchedule(${s.id})">
                                             Ubah
                                         </button>
-
-                                        <button class="btn secondary"
-                                            onclick="deleteSchedule(${s.id})">
-                                            Hapus
-                                        </button>
                                     </td>
                                 </tr>
                             `;
@@ -1567,18 +1518,175 @@ function schedulePage() {
             </div>
 
         </section>
+        `;
+}
 
+// =====================================
+// AVAILABILITY PAGE
+// =====================================
+
+function availabilityPage() {
+    const sorted = [...availabilities].sort((a, b) =>
+        a.start_at.localeCompare(b.start_at)
+    );
+
+    const formatDateTime = value => {
+        const date = new Date(value.replace(" ", "T"));
+        return date.toLocaleString("id-ID", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    };
+
+    content.innerHTML =
+        heading(
+            "KETERSEDIAAN TRAINER",
+            "Ketersediaan Jadwal",
+            "Tambahkan waktu kosong agar member dapat memilih slot latihan yang tersedia."
+        ) +
+        `
         <section class="panel">
-
             <div class="panel-head">
-                <h2>Kalender Mingguan</h2>
-                <span class="sub">Tampilan jadwal per hari</span>
+                <div>
+                    <h2>Tambah Slot Ketersediaan</h2>
+                    <p class="sub">Slot hanya dapat ditambahkan untuk waktu mendatang.</p>
+                </div>
             </div>
 
-            ${week()}
+            <form method="POST" action="${@json(route('pt.availability.store'))}"
+                style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
+                <input type="hidden" name="_token" value="${csrfToken}">
 
+                <div class="field">
+                    <label for="availability_start">Tanggal dan Jam Mulai</label>
+                    <input id="availability_start" type="datetime-local"
+                        name="start_at" required min="${getLocalDateTimeString()}"
+                        onchange="setAvailabilityEndTime(this.value)">
+                </div>
+
+                <div class="field">
+                    <label for="availability_end">Tanggal dan Jam Selesai (Otomatis +1 Jam)</label>
+                    <input id="availability_end" type="datetime-local"
+                        name="end_at" required readonly
+                        style="opacity:.8;cursor:not-allowed">
+                    <small style="display:block;color:var(--muted);font-size:10px;margin-top:6px;">
+                        Jam selesai otomatis satu jam setelah jam mulai.
+                    </small>
+                </div>
+
+                <div style="grid-column:1/-1;display:flex;justify-content:flex-end;">
+                    <button class="btn primary" type="submit">+ Tambah Slot</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="stats">
+            <div class="stat">
+                <span>Slot Tersedia</span>
+                <strong>${availabilities.filter(s => s.status === "available").length}</strong>
+                <small>Menunggu booking member</small>
+            </div>
+            <div class="stat">
+                <span>Slot Dipesan</span>
+                <strong>${availabilities.filter(s => s.status === "booked").length}</strong>
+                <small>Sudah memiliki booking</small>
+            </div>
+            <div class="stat">
+                <span>Slot Nonaktif</span>
+                <strong>${availabilities.filter(s => s.status === "inactive").length}</strong>
+                <small>Tidak ditampilkan ke member</small>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>Daftar Ketersediaan</h2>
+                    <p class="sub">Slot yang sudah dipesan tidak dapat dinonaktifkan.</p>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>MULAI</th>
+                            <th>SELESAI</th>
+                            <th>STATUS</th>
+                            <th>AKSI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${sorted.map(slot => {
+                            const label = slot.status === "available"
+                                ? "Tersedia"
+                                : slot.status === "booked"
+                                    ? "Dipesan"
+                                    : "Nonaktif";
+                            const badgeClass = slot.status === "booked"
+                                ? "done"
+                                : slot.status === "inactive"
+                                    ? "cancelled"
+                                    : "";
+
+                            return `
+                                <tr>
+                                    <td>${formatDateTime(slot.start_at)}</td>
+                                    <td>${formatDateTime(slot.end_at)}</td>
+                                    <td><span class="badge ${badgeClass}">${label}</span></td>
+                                    <td>
+                                        ${slot.status === "available" ? `
+                                            <form method="POST"
+                                                action="${@json(url('/personal-trainer/ketersediaan'))}/${slot.id}/nonaktifkan"
+                                                onsubmit="return confirm('Nonaktifkan slot ini?')">
+                                                <input type="hidden" name="_token" value="${csrfToken}">
+                                                <input type="hidden" name="_method" value="PATCH">
+                                                <button class="btn secondary" type="submit">Nonaktifkan</button>
+                                            </form>
+                                        ` : `<span class="sub">—</span>`}
+                                    </td>
+                                </tr>
+                            `;
+                        }).join("") || `
+                            <tr><td colspan="4" class="empty">Belum ada slot ketersediaan.</td></tr>
+                        `}
+                    </tbody>
+                </table>
+            </div>
         </section>
         `;
+}
+
+function setAvailabilityEndTime(startValue) {
+    const endInput = document.getElementById("availability_end");
+
+    if (!startValue || !endInput) {
+        if (endInput) endInput.value = "";
+        return;
+    }
+
+    // datetime-local ditafsirkan sebagai waktu lokal browser.
+    const startDate = new Date(startValue);
+    if (Number.isNaN(startDate.getTime())) {
+        endInput.value = "";
+        return;
+    }
+
+    const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+    const localEnd = new Date(
+        endDate.getTime() - endDate.getTimezoneOffset() * 60000
+    );
+
+    endInput.value = localEnd.toISOString().slice(0, 16);
+}
+
+function getLocalDateTimeString() {
+    const now = new Date();
+    const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+    return local.toISOString().slice(0, 16);
 }
 
 // =====================================
@@ -1586,11 +1694,6 @@ function schedulePage() {
 // =====================================
 
 function memberPage() {
-
-    const average = Math.round(
-        members.reduce((total, m) => total + m.progress, 0) /
-        members.length
-    );
 
     content.innerHTML =
         heading(
@@ -1607,15 +1710,6 @@ function memberPage() {
                 <strong>${members.length}</strong>
             </div>
 
-            <div class="stat">
-                <span>Program Aktif</span>
-                <strong>${members.length}</strong>
-            </div>
-
-            <div class="stat">
-                <span>Rata-rata Progres</span>
-                <strong>${average}%</strong>
-            </div>
 
             <div class="stat">
                 <span>Total Sesi</span>
@@ -1646,9 +1740,7 @@ function memberPage() {
                     <thead>
                         <tr>
                             <th>NAMA ANGGOTA</th>
-                            <th>PAKET MEMBERSHIP</th>
-                            <th>TUJUAN LATIHAN</th>
-                            <th>PROGRES PROGRAM</th>
+                            <th>TOTAL SESI PT</th>
                         </tr>
                     </thead>
 
@@ -1668,7 +1760,7 @@ function filterMembers(query) {
 
     const filtered = members.filter(m => {
         return (
-            m.name + " " + m.plan + " " + m.goal
+            m.name
         ).toLowerCase().includes(query.toLowerCase());
     });
 
@@ -1682,15 +1774,8 @@ function filterMembers(query) {
 
 function reviewPage() {
 
-    const average = (
-        reviews.reduce((sum, r) => sum + r.rating, 0) /
-        reviews.length
-    ).toFixed(1);
-
-    const distribution = [5, 4, 3, 2, 1].map(star => ({
-        star,
-        count: reviews.filter(r => r.rating === star).length
-    }));
+    const average = Number(averageRating || 0).toFixed(1);
+    const distribution = ratingDistribution || [];
 
     content.innerHTML =
         heading(
@@ -1733,7 +1818,7 @@ function reviewPage() {
 
                 <div class="review-list">
 
-                    ${reviews.map(r => `
+                    ${reviews.length ? reviews.map(r => `
                         <article class="review-card">
 
                             <div class="review-top">
@@ -1767,7 +1852,7 @@ function reviewPage() {
                             </p>
 
                         </article>
-                    `).join("")}
+                    `).join("") : `<div class="empty">Belum ada review untuk profil PT ini.</div>`}
 
                 </div>
 
@@ -1818,83 +1903,127 @@ function reviewPage() {
 // =====================================
 
 function profilePage() {
+    const trainerName = @json($user->name);
+    const trainerEmail = @json($user->email);
+    const trainerPhone = @json($user->phone ?? '');
+    const trainerDescription = @json($pt->description ?? '');
+    const trainerStatus = @json(strtoupper((string) ($pt->status ?? 'Aktif')));
+    const trainerPrice = PT_PRICE.toLocaleString("id-ID");
+    const trainerInitial = trainerName.split(" ").filter(Boolean).slice(0, 2).map(word => word[0].toUpperCase()).join("");
+    const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[char]);
 
     content.innerHTML =
         heading(
             "AKUN TRAINER",
             "Profil Saya",
-            "Informasi profil personal trainer yang ditampilkan kepada anggota IRONHUB."
+            "Kelola informasi akun dan keamanan password Personal Trainer GYMBRO."
         ) +
-
         `
-        <section class="panel" style="max-width:750px">
-
+        <section class="panel" style="max-width:850px">
             <div class="profile-card">
-
-                <div class="profile-large">AR</div>
-
+                <div class="profile-large">${escapeHtml(trainerInitial)}</div>
                 <div>
-                    <h2>Andi Ramadhan</h2>
-                    <p>Personal Trainer · IRONHUB</p>
-                    <span class="badge" style="margin-top:9px">
-                        Trainer Aktif
-                    </span>
+                    <h2>${escapeHtml(trainerName)}</h2>
+                    <p>Personal Trainer · GYMBRO</p>
+                    <span class="badge" style="margin-top:9px">${escapeHtml(trainerStatus)}</span>
                 </div>
-
             </div>
 
             <div class="table-wrap">
-
                 <table class="info-table">
-
                     <tbody>
-
-                        <tr>
-                            <td>Email</td>
-                            <td>andi.ramadhan@ironhub.test</td>
-                        </tr>
-
-                        <tr>
-                            <td>Nomor HP</td>
-                            <td>0812-3456-7890</td>
-                        </tr>
-
-                        <tr>
-                            <td>Pengalaman</td>
-                            <td>5 Tahun</td>
-                        </tr>
-
-                        <tr>
-                            <td>Split Gym</td>
-                            <td>PPL · Upper / Lower</td>
-                        </tr>
-
-                        <tr>
-                            <td>Tarif PT</td>
-                            <td style="color:var(--lime);font-weight:800">
-                                Rp100.000 / sesi
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Deskripsi</td>
-                            <td>
-                                Membantu anggota membangun kekuatan,
-                                meningkatkan teknik latihan, dan mencapai
-                                target kebugaran melalui program yang terstruktur.
-                            </td>
-                        </tr>
-
+                        <tr><td>Email</td><td>${escapeHtml(trainerEmail)}</td></tr>
+                        <tr><td>Nomor HP</td><td>${escapeHtml(trainerPhone || '-')}</td></tr>
+                        <tr><td>Tarif PT</td><td style="color:var(--lime);font-weight:800">Rp${trainerPrice} / sesi</td></tr>
+                        <tr><td>Deskripsi</td><td>${escapeHtml(trainerDescription || '-')}</td></tr>
                     </tbody>
-
                 </table>
+            </div>
+        </section>
 
+        <section class="panel" style="max-width:850px">
+            <div class="panel-head">
+                <div>
+                    <h2>Edit Informasi Profil</h2>
+                    <p class="sub">Perubahan nama dan deskripsi akan disinkronkan ke profil PT.</p>
+                </div>
             </div>
 
-            <p class="sub" style="margin-top:15px">
-                Data profil ini merupakan contoh tampilan.
-            </p>
+            <form method="POST" action="${@json(route('pt.profile.update'))}">
+                <input type="hidden" name="_token" value="${csrfToken}">
+                <input type="hidden" name="_method" value="PUT">
 
+                <div class="field">
+                    <label for="pt_profile_name">Nama Lengkap</label>
+                    <input id="pt_profile_name" name="name" type="text"
+                        value="${escapeHtml(trainerName)}" maxlength="255" required>
+                </div>
+
+                <div class="field">
+                    <label for="pt_profile_email">Email</label>
+                    <input id="pt_profile_email" name="email" type="email"
+                        value="${escapeHtml(trainerEmail)}" maxlength="255" required>
+                </div>
+
+                <div class="field">
+                    <label for="pt_profile_phone">Nomor HP</label>
+                    <input id="pt_profile_phone" name="phone" type="tel"
+                        value="${escapeHtml(trainerPhone)}" maxlength="20"
+                        placeholder="Contoh: 081234567890">
+                </div>
+
+                <div class="field">
+                    <label for="pt_profile_description">Deskripsi Profil</label>
+                    <textarea id="pt_profile_description" name="description"
+                        maxlength="1000" placeholder="Ceritakan pengalaman atau fokus latihan kamu...">${escapeHtml(trainerDescription)}</textarea>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn primary">Simpan Profil</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="panel" style="max-width:850px">
+            <div class="panel-head">
+                <div>
+                    <h2>Ganti Password</h2>
+                    <p class="sub">Gunakan password minimal 8 karakter dan jangan bagikan kepada orang lain.</p>
+                </div>
+            </div>
+
+            <form method="POST" action="${@json(route('pt.password.update'))}">
+                <input type="hidden" name="_token" value="${csrfToken}">
+                <input type="hidden" name="_method" value="PUT">
+
+                <div class="field">
+                    <label for="pt_current_password">Password Saat Ini</label>
+                    <input id="pt_current_password" name="current_password"
+                        type="password" autocomplete="current-password" required>
+                </div>
+
+                <div class="field">
+                    <label for="pt_new_password">Password Baru</label>
+                    <input id="pt_new_password" name="password"
+                        type="password" minlength="8" autocomplete="new-password" required>
+                </div>
+
+                <div class="field">
+                    <label for="pt_new_password_confirmation">Konfirmasi Password Baru</label>
+                    <input id="pt_new_password_confirmation" name="password_confirmation"
+                        type="password" minlength="8" autocomplete="new-password" required>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn primary">Simpan Password</button>
+                </div>
+            </form>
         </section>
         `;
 }
@@ -1927,6 +2056,7 @@ function render() {
 
     if (page === "dashboard") dashboard();
     if (page === "jadwal") schedulePage();
+    if (page === "ketersediaan") availabilityPage();
     if (page === "anggota") memberPage();
     if (page === "review") reviewPage();
     if (page === "profil") profilePage();
@@ -1951,44 +2081,25 @@ function getTodayString() {
 // MODAL SCHEDULE
 // =====================================
 
-function populateMemberOptions() {
+function openModal(schedule) {
+    if (!schedule) return;
 
-    const select = document.getElementById("member");
+    editId = schedule.id;
 
-    select.innerHTML = `
-        <option value="">Pilih anggota</option>
-        ${members.map(m => `
-            <option value="${m.name}">${m.name}</option>
-        `).join("")}
-    `;
-}
+    document.getElementById("modalTitle").textContent = "Ubah Jadwal Sesi";
 
-function openModal(schedule = null) {
+    const form = document.getElementById("form");
+    form.action = `${@json(url('/personal-trainer/jadwal'))}/${schedule.id}`;
 
-    editId = schedule ? schedule.id : null;
-
-    document.getElementById("modalTitle").textContent =
-        schedule ? "Ubah Jadwal Sesi" : "Atur Jadwal Sesi";
-
-    populateMemberOptions();
-
-    document.getElementById("member").value =
-        schedule?.member || "";
-
-    document.getElementById("date").value =
-        schedule?.date || getTodayString();
-
-    document.getElementById("start").value =
-        schedule?.time.split(" - ")[0] || "10:00";
-
-    document.getElementById("end").value =
-        schedule?.time.split(" - ")[1] || "11:00";
-
-    document.getElementById("workout").value =
-        schedule?.workout || "Upper Body";
-
+    document.getElementById("member").value = schedule.member || "-";
+    document.getElementById("date").value = schedule.date || "-";
+    document.getElementById("time").value = schedule.time || "-";
+    document.getElementById("workout").value = schedule.workout || "Personal Training";
+    // Status yang ditampilkan kepada PT disederhanakan menjadi dua pilihan.
+    // Status selain completed dipetakan ke Dikonfirmasi saat diedit.
     document.getElementById("status").value =
-        schedule?.status || "Dikonfirmasi";
+        schedule.status === "completed" ? "completed" : "approved";
+    document.getElementById("catatan").value = schedule.catatan || "";
 
     document.getElementById("modal").classList.add("show");
 }
@@ -1998,92 +2109,22 @@ function closeModal() {
 }
 
 function editSchedule(id) {
+    const schedule = schedules.find(s => Number(s.id) === Number(id));
 
-    const schedule = schedules.find(s => s.id === id);
-
-    if (schedule) openModal(schedule);
-}
-
-function deleteSchedule(id) {
-
-    if (confirm("Hapus jadwal sesi latihan ini?")) {
-
-        schedules = schedules.filter(s => s.id !== id);
-
-        render();
+    if (schedule) {
+        openModal(schedule);
     }
 }
-
-// =====================================
-// FORM SUBMISSION
-// =====================================
-
-document.getElementById("form").addEventListener("submit", e => {
-
-    e.preventDefault();
-
-    const member = document.getElementById("member").value;
-    const date = document.getElementById("date").value;
-    const start = document.getElementById("start").value;
-    const end = document.getElementById("end").value;
-
-    if (!member || !date || !start || !end) {
-        alert("Mohon lengkapi semua data jadwal.");
-        return;
-    }
-
-    if (end <= start) {
-        alert("Jam selesai harus lebih besar dari jam mulai.");
-        return;
-    }
-
-    const schedule = {
-
-        id: editId || Date.now(),
-
-        member: member,
-
-        date: date,
-
-        time: `${start} - ${end}`,
-
-        workout: document.getElementById("workout").value,
-
-        status: document.getElementById("status").value
-
-    };
-
-    if (editId) {
-
-        schedules = schedules.map(s =>
-            s.id === editId ? schedule : s
-        );
-
-    } else {
-
-        schedules.push(schedule);
-
-    }
-
-    closeModal();
-
-    render();
-
-});
-
-document.getElementById("modal").addEventListener("click", e => {
-
-    if (e.target === e.currentTarget) {
-        closeModal();
-    }
-
-});
 
 // =====================================
 // INITIALIZATION
 // =====================================
 
-render();
+if (@json(session('open_pt_profile', false))) {
+    navigate('profil');
+} else {
+    render();
+}
 </script>
 
 </body>

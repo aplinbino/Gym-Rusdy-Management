@@ -13,7 +13,6 @@ class Pt extends Model
     protected $fillable = [
         'user_id',
         'pt_name',
-        'split_gym',
         'price_per_session',
         'description',
         'photo',

@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#101510">
-<title>Rating Personal Trainer — IRONHUB</title>
+<title>Rating Personal Trainer — GYMBRO</title>
 
 <style>
 * {
@@ -256,8 +256,8 @@ textarea:focus {
 <main class="container">
 
     <div class="brand">
-        <span class="mark">I</span>
-        <span>IRONHUB</span>
+        <span class="mark">G</span>
+        <span>GYMBRO</span>
     </div>
 
     <div class="eyebrow">Member Feedback</div>
@@ -274,25 +274,28 @@ textarea:focus {
     <div class="trainer">
 
         <div class="trainer-avatar">
-            A
+            {{ strtoupper(substr($trainer->pt_name ?: $trainer->account_name, 0, 1)) }}
         </div>
 
         <div class="trainer-info">
-            <h3 id="trainerName">Andi Pratama</h3>
-            <p>Personal Trainer IRONHUB</p>
+            <h3 id="trainerName">{{ $trainer->pt_name ?: $trainer->account_name }}</h3>
+            <p>Personal Trainer GYMBRO</p>
         </div>
 
     </div>
 
 
     <!-- FORM RATING -->
-    <form action="/dashboard_user" method="POST" id="ratingForm">
-
-        <!-- ID PT -->
-        <input type="hidden" name="trainer_id" value="PT001">
+    @if($existingReview)
+        <div class="empty-review" style="padding:16px;border:1px solid #405845;border-radius:10px;background:#101710;color:#c8f169;font-size:13px;line-height:1.6">
+            Kamu sudah memberikan ulasan untuk PT ini dengan rating {{ $existingReview->rating }}/5.
+        </div>
+    @else
+    <form action="{{ route('member.pt-review.store', $trainer->id) }}" method="POST" id="ratingForm">
+        @csrf
 
         <!-- NILAI BINTANG -->
-        <input type="hidden" name="rating" id="ratingValue" value="">
+        <input type="hidden" name="rating" id="ratingValue" value="{{ old('rating') }}">
 
         <section class="rating-section">
 
@@ -300,19 +303,19 @@ textarea:focus {
 
             <div class="stars">
 
-                <button type="button" class="star"
+                <button type="button" class="star {{ old('rating') >= 1 ? 'active' : '' }}"
                     data-value="1" aria-label="1 bintang">★</button>
 
-                <button type="button" class="star"
+                <button type="button" class="star {{ old('rating') >= 2 ? 'active' : '' }}"
                     data-value="2" aria-label="2 bintang">★</button>
 
-                <button type="button" class="star"
+                <button type="button" class="star {{ old('rating') >= 3 ? 'active' : '' }}"
                     data-value="3" aria-label="3 bintang">★</button>
 
-                <button type="button" class="star"
+                <button type="button" class="star {{ old('rating') >= 4 ? 'active' : '' }}"
                     data-value="4" aria-label="4 bintang">★</button>
 
-                <button type="button" class="star"
+                <button type="button" class="star {{ old('rating') >= 5 ? 'active' : '' }}"
                     data-value="5" aria-label="5 bintang">★</button>
 
             </div>
@@ -333,11 +336,14 @@ textarea:focus {
 
             <textarea
                 id="review"
-                name="review"
+                name="comment"
                 maxlength="200"
                 placeholder="Ceritakan pengalaman latihanmu bersama PT ini..."
                 required
-            ></textarea>
+            >{{ old('comment') }}</textarea>
+            @error('comment')
+                <small style="display:block;color:#ff9999;margin-top:7px">{{ $message }}</small>
+            @enderror
 
             <div class="character-count">
                 <span id="charCount">0</span>/200 karakter
@@ -346,14 +352,42 @@ textarea:focus {
         </section>
 
 
+        <!-- PILIHAN PRIVASI NAMA -->
+        <section class="review-section" style="margin-top:18px;margin-bottom:22px">
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;line-height:1.5">
+                <input
+                    type="checkbox"
+                    name="is_anonymous"
+                    value="1"
+                    style="width:16px;height:16px;margin-top:2px;accent-color:#c8f169"
+                    {{ old('is_anonymous') ? 'checked' : '' }}
+                >
+                <span>
+                    Tampilkan ulasan sebagai anonim
+                    <small style="display:block;color:#aab4a7;font-weight:400;margin-top:3px">
+                        Jika tidak dicentang, nama yang ditampilkan hanya nama depan dan inisial.
+                    </small>
+                </span>
+            </label>
+        </section>
+
         <!-- SUBMIT -->
         <button type="submit" class="btn-submit">
             Kirim Rating
         </button>
 
     </form>
+    @endif
 
-    <a href="/dashboard" class="back-link">
+    @if($errors->any())
+        <div style="margin-top:14px;color:#ff9999;font-size:12px;line-height:1.5">
+            @foreach($errors->all() as $error)
+                <div>{{ $error }}</div>
+            @endforeach
+        </div>
+    @endif
+
+    <a href="{{ route('user.dashboard_user') }}" class="back-link">
         ← Kembali ke Dashboard
     </a>
 
@@ -375,6 +409,12 @@ const ratingDescriptions = {
     4: "Sangat baik",
     5: "Luar biasa!"
 };
+
+const initialRating = Number(ratingValue.value || 0);
+if (initialRating > 0) {
+    stars.forEach(item => item.classList.toggle("active", Number(item.dataset.value) <= initialRating));
+    ratingText.textContent = ratingDescriptions[initialRating];
+}
 
 stars.forEach(star => {
 
@@ -407,18 +447,19 @@ stars.forEach(star => {
 const review = document.getElementById("review");
 const charCount = document.getElementById("charCount");
 
-review.addEventListener("input", () => {
-
+if (review && charCount) {
     charCount.textContent = review.value.length;
-
-});
+    review.addEventListener("input", () => {
+        charCount.textContent = review.value.length;
+    });
+}
 
 
 // VALIDASI SEBELUM KIRIM
 
 const form = document.getElementById("ratingForm");
 
-form.addEventListener("submit", (event) => {
+form?.addEventListener("submit", (event) => {
 
     if (!ratingValue.value) {
 
@@ -430,7 +471,7 @@ form.addEventListener("submit", (event) => {
 
     }
 
-    if (!review.value.trim()) {
+    if (!review || !review.value.trim()) {
 
         event.preventDefault();
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Pt;
+use App\Models\PtProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -12,7 +13,9 @@ class AdminPtController extends Controller
     // Menampilkan seluruh data PT
     public function index()
     {
-        $trainers = Pt::with('user')->latest()->get();
+        $trainers = Pt::with('user')
+            ->latest()
+            ->get();
 
         return response()->json($trainers);
     }
@@ -26,13 +29,12 @@ class AdminPtController extends Controller
             'phone' => 'required|string|max:20',
             'password' => 'required|string|min:8',
             'pt_name' => 'required|string|max:255',
-            'split_gym' => 'required|in:Push Day,Pull Day,Leg Day,Upper Body,Lower Body,Full Body',
             'description' => 'nullable|string',
         ]);
 
         $trainer = DB::transaction(function () use ($validated) {
 
-            // Membuat akun login PT
+            // 1. Membuat akun login PT
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
@@ -42,15 +44,27 @@ class AdminPtController extends Controller
                 'membership_status' => 'inactive',
             ]);
 
-            // Membuat profil PT
+            // 2. Membuat profil PT utama
             $pt = Pt::create([
                 'user_id' => $user->id,
                 'pt_name' => $validated['pt_name'],
-                'split_gym' => $validated['split_gym'],
                 'price_per_session' => 100000,
                 'description' => $validated['description'] ?? null,
                 'status' => 'active',
             ]);
+
+            // 3. Membuat profil ketersediaan PT
+            // Menggunakan user_id yang sama agar terhubung
+            // dengan profil PT utama.
+            PtProfile::updateOrCreate(
+                [
+                    'user_id' => $user->id,
+                ],
+                [
+                    'description' => $validated['description'] ?? null,
+                    'price_per_session' => 100000,
+                ]
+            );
 
             return $pt->load('user');
         });
@@ -70,14 +84,13 @@ class AdminPtController extends Controller
             'phone' => 'required|string|max:20',
             'password' => 'nullable|string|min:8',
             'pt_name' => 'required|string|max:255',
-            'split_gym' => 'required|in:Push Day,Pull Day,Leg Day,Upper Body,Lower Body,Full Body',
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
         ]);
 
         $trainer = DB::transaction(function () use ($validated, $pt) {
 
-            // Memperbarui akun user
+            // 1. Memperbarui akun user
             $userData = [
                 'name' => $validated['name'],
                 'email' => $validated['email'],
@@ -91,14 +104,25 @@ class AdminPtController extends Controller
 
             $pt->user->update($userData);
 
-            // Memperbarui profil PT
+            // 2. Memperbarui profil PT utama
             $pt->update([
                 'pt_name' => $validated['pt_name'],
-                'split_gym' => $validated['split_gym'],
                 'price_per_session' => 100000,
                 'description' => $validated['description'] ?? null,
                 'status' => $validated['status'],
             ]);
+
+            // 3. Sinkronisasi profil ketersediaan PT
+            // Jika profil lama belum ada, buat otomatis.
+            PtProfile::updateOrCreate(
+                [
+                    'user_id' => $pt->user_id,
+                ],
+                [
+                    'description' => $validated['description'] ?? null,
+                    'price_per_session' => 100000,
+                ]
+            );
 
             return $pt->fresh()->load('user');
         });
@@ -109,12 +133,16 @@ class AdminPtController extends Controller
         ]);
     }
 
-    // Menghapus akun dan profil PT
+    // Menghapus akun dan seluruh profil PT terkait
     public function destroy(Pt $pt)
     {
         DB::transaction(function () use ($pt) {
-            // Menghapus akun user.
-            // Profil PT ikut terhapus melalui cascadeOnDelete.
+
+            // Penghapusan user akan menghapus:
+            // - Profil pada tabel pt
+            // - Profil pada tabel pt_profiles
+            // - Slot pada tabel pt_availabilities
+            // sesuai foreign key cascade yang sudah tersedia.
             $pt->user->delete();
         });
 

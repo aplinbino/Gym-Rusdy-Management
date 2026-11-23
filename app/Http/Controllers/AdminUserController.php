@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AdminUserController extends Controller
 {
-    // Mengambil seluruh member
+    /**
+     * Mengambil seluruh member.
+     */
     public function index()
     {
+        $this->ensureAdmin();
+
         $users = User::where('role', 'member')
             ->orderBy('id', 'asc')
             ->get([
@@ -26,9 +31,13 @@ class AdminUserController extends Controller
         return response()->json($users);
     }
 
-    // Menambahkan member baru
+    /**
+     * Menambahkan member baru.
+     */
     public function store(Request $request)
     {
+        $this->ensureAdmin();
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
@@ -51,12 +60,51 @@ class AdminUserController extends Controller
         ], 201);
     }
 
-    // Menghapus member
-    public function destroy($id)
+    /**
+     * Memperbarui data profil member.
+     * Status dan periode membership tidak diubah dari form ini.
+     */
+    public function update(Request $request, $id)
     {
+        $this->ensureAdmin();
+
         $user = User::where('role', 'member')->findOrFail($id);
 
-        // Jangan hapus member yang masih memiliki riwayat.
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+            'phone' => 'nullable|string|max:20',
+        ]);
+
+        $user->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+        ]);
+
+        return response()->json([
+            'message' => 'Data member berhasil diperbarui.',
+            'user' => $user->only([
+                'id', 'name', 'email', 'phone',
+                'membership_status', 'membership_start', 'membership_end',
+            ]),
+        ]);
+    }
+
+    /**
+     * Menghapus member hanya jika belum memiliki riwayat terkait.
+     */
+    public function destroy($id)
+    {
+        $this->ensureAdmin();
+
+        $user = User::where('role', 'member')->findOrFail($id);
+
         if (
             $user->transaksi()->exists() ||
             $user->scheduleLatihan()->exists() ||
@@ -72,5 +120,13 @@ class AdminUserController extends Controller
         return response()->json([
             'message' => 'Member berhasil dihapus.',
         ]);
+    }
+
+    /**
+     * Memastikan endpoint hanya dapat digunakan oleh Admin.
+     */
+    private function ensureAdmin(): void
+    {
+        abort_unless(auth()->check() && auth()->user()->role === 'admin', 403);
     }
 }

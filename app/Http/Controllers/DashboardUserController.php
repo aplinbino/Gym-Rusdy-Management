@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
@@ -43,8 +44,13 @@ class DashboardUserController extends Controller
         $membershipTotalDays = ($membershipActive && $user->membership_start && $user->membership_end)
             ? max(1, Carbon::parse($user->membership_start)->diffInDays(Carbon::parse($user->membership_end)))
             : 1;
+        // Progress menunjukkan masa Membership yang SUDAH berjalan.
+        $membershipElapsedDays = ($membershipActive && $user->membership_start)
+            ? max(0, Carbon::parse($user->membership_start)->startOfDay()->diffInDays($today))
+            : 0;
+
         $membershipProgress = $membershipActive
-            ? max(0, min(100, ($membershipDaysLeft / $membershipTotalDays) * 100))
+            ? max(0, min(100, ($membershipElapsedDays / $membershipTotalDays) * 100))
             : 0;
 
         // Prioritaskan PT yang dipilih pada profil member.
@@ -111,6 +117,24 @@ class DashboardUserController extends Controller
             ->select('schedule_latihan.*', 'pt.pt_name')
             ->get();
 
+        // PT yang sudah pernah diberi ulasan oleh member ini.
+        $reviewedPtIds = DB::table('reviews')
+            ->where('user_id', $user->id)
+            ->where('target_type', 'pt')
+            ->pluck('target_id')
+            ->map(fn ($id) => (int) $id)
+            ->all();
+
+        // Riwayat transaksi member (Membership dan sesi PT).
+        $transactions = DB::table('transaksi')
+            ->leftJoin('pt', 'pt.id', '=', 'transaksi.pt_id')
+            ->where('transaksi.user_id', $user->id)
+            ->orderByDesc('transaksi.tanggal_transaksi')
+            ->orderByDesc('transaksi.id')
+            ->limit(10)
+            ->select('transaksi.*', 'pt.pt_name')
+            ->get();
+
         return view('user.dashboard_user', compact(
             'user',
             'membershipActive',
@@ -122,8 +146,90 @@ class DashboardUserController extends Controller
             'completedSessions',
             'remainingSessions',
             'schedules',
-            'recentActivities'
+            'recentActivities',
+            'reviewedPtIds',
+            'transactions'
         ));
+    }
+
+
+    /**
+     * Memperbarui informasi profil member yang sedang login.
+     * Hanya kolom profil yang diubah; data membership dan transaksi tetap aman.
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+        abort_unless($user, 401);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+            'phone' => [
+                'nullable',
+                'string',
+                'max:20',
+                'regex:/^[0-9+\\-\\s()]*$/',
+            ],
+        ], [
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'name.max' => 'Nama lengkap maksimal 255 karakter.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah digunakan akun lain.',
+            'phone.max' => 'Nomor HP maksimal 20 karakter.',
+            'phone.regex' => 'Nomor HP hanya boleh berisi angka dan karakter +, -, spasi, atau tanda kurung.',
+        ]);
+
+        DB::table('users')
+            ->where('id', $user->id)
+            ->update([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'phone' => $validated['phone'] ?? null,
+                'updated_at' => now(),
+            ]);
+
+        return redirect()
+            ->route('user.dashboard_user')
+            ->with('success', 'Informasi member berhasil diperbarui.');
+    }
+
+
+    /** Memperbarui password akun member yang sedang login. */
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::user();
+        abort_unless($user, 401);
+
+        $validated = $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'string', 'min:8', 'confirmed', 'different:current_password'],
+        ], [
+            'current_password.required' => 'Password saat ini wajib diisi.',
+            'current_password.current_password' => 'Password saat ini tidak sesuai.',
+            'password.required' => 'Password baru wajib diisi.',
+            'password.min' => 'Password baru minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi password baru tidak sama.',
+            'password.different' => 'Password baru harus berbeda dari password saat ini.',
+        ]);
+
+        DB::table('users')
+            ->where('id', $user->id)
+            ->update([
+                'password' => Hash::make($validated['password']),
+                'updated_at' => now(),
+            ]);
+
+        return redirect()
+            ->route('user.dashboard_user')
+            ->with('success', 'Password berhasil diperbarui.');
     }
 
     public function storeSchedule(Request $request)
@@ -207,3 +313,4 @@ class DashboardUserController extends Controller
             ->with('success', 'Jadwal latihan berhasil diajukan.');
     }
 }
+    

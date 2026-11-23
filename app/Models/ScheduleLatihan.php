@@ -13,11 +13,14 @@ class ScheduleLatihan extends Model
         'user_id',
         'pt_id',
         'transaksi_id',
+        'pt_availability_id',
         'tanggal',
         'jam',
         'jenis_latihan',
         'status',
         'catatan',
+        'jam_mulai',
+'jam_selesai',
     ];
 
     protected function casts(): array
@@ -43,5 +46,11 @@ class ScheduleLatihan extends Model
     public function transaksi(): BelongsTo
     {
         return $this->belongsTo(Transaksi::class);
+    }
+
+    // Slot ketersediaan PT yang dipesan
+    public function ptAvailability(): BelongsTo
+    {
+        return $this->belongsTo(PtAvailability::class);
     }
 }

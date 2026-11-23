@@ -42,10 +42,10 @@ class GymbroDummySeeder extends Seeder
             }
 
             $ptData = [
-                ['name' => 'Andi Pratama', 'email' => 'pt.andi@gymbro.test', 'phone' => '081200000011', 'split' => 'Push Day', 'description' => 'Fokus latihan dada, bahu, dan trisep.'],
-                ['name' => 'Budi Santoso', 'email' => 'pt.budi@gymbro.test', 'phone' => '081200000012', 'split' => 'Pull Day', 'description' => 'Fokus latihan punggung dan bisep.'],
-                ['name' => 'Citra Maharani', 'email' => 'pt.citra@gymbro.test', 'phone' => '081200000013', 'split' => 'Leg Day', 'description' => 'Fokus kekuatan dan pembentukan otot kaki.'],
-                ['name' => 'Dimas Saputra', 'email' => 'pt.dimas@gymbro.test', 'phone' => '081200000014', 'split' => 'Full Body', 'description' => 'Program latihan seluruh kelompok otot.'],
+                ['name' => 'Andi Pratama', 'email' => 'pt.andi@gymbro.test', 'phone' => '081200000011', 'description' => 'Fokus latihan dada, bahu, dan trisep.'],
+                ['name' => 'Budi Santoso', 'email' => 'pt.budi@gymbro.test', 'phone' => '081200000012', 'description' => 'Fokus latihan punggung dan bisep.'],
+                ['name' => 'Citra Maharani', 'email' => 'pt.citra@gymbro.test', 'phone' => '081200000013', 'description' => 'Fokus kekuatan dan pembentukan otot kaki.'],
+                ['name' => 'Dimas Saputra', 'email' => 'pt.dimas@gymbro.test', 'phone' => '081200000014', 'description' => 'Program latihan seluruh kelompok otot.'],
             ];
 
             $ptIds = [];
@@ -66,7 +66,6 @@ class GymbroDummySeeder extends Seeder
 
                 $ptId = $this->ensureRow('pt', ['user_id' => $userId], [
                     'pt_name' => $pt['name'],
-                    'split_gym' => $pt['split'],
                     'price_per_session' => 100000,
                     'description' => $pt['description'],
                     'photo' => null,

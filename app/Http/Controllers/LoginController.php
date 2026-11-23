@@ -36,14 +36,17 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
+            // Login Member
             if ($expectedRole === 'member') {
                 return redirect('/dashboard_user');
             }
 
+            // Login Admin
             if ($expectedRole === 'admin') {
-                return redirect('/tabel_user');
+                return redirect('/admin/dashboard');
             }
 
+            // Login Personal Trainer
             if ($expectedRole === 'pt') {
                 return redirect('/personal-trainer');
             }
